@@ -1,10 +1,10 @@
-package com.capstone.lama;
+package com.capstone.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LamaApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {
