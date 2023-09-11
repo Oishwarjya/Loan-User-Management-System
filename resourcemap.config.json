@@ -1,0 +1,86 @@
+{
+    "users": {
+        "dataURL": "/api/",
+        "fields": [
+            {
+                "Name": "UserID",
+                "DisplayName": "Employee ID",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": true
+            },
+            {
+                "Name": "Password",
+                "DisplayName": "Password",
+                "Type": "password",
+                "Format": "string",
+                "Mutable": true
+            }
+        ],
+        "count": 2
+    },
+    "employees": {
+        "dataURL": "/api/",
+        "fields": [
+            {
+                "Name": "UserID",
+                "DisplayName": "Employee ID",
+                "Type": "text",
+                "Format": "stringEmpID",
+                "Mutable": true
+            },
+            {
+                "Name": "Name",
+                "DisplayName": "Name",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": true
+            },
+            {
+                "Name": "Designation",
+                "DisplayName": "Designation",
+                "Type": "staticlist",
+                "Format": "string",
+                "Mutable": true,
+                "Options": [
+                    "Employee", "Manager", "Contractor", "Other"
+                ]
+            },
+            {
+                "Name": "Department",
+                "DisplayName": "Department",
+                "Type": "staticlist",
+                "Format": "string",
+                "Mutable": true,
+                "Options": [
+                    "Technology", "Finance", "Human Resources", "Sales and Marketing", "Operations", "L&D"
+                ]
+            },
+            {
+                "Name": "Gender",
+                "DisplayName": "Gender",
+                "Type": "staticlist",
+                "Format": "string",
+                "Mutable": true,
+                "Options": [
+                    "Male", "Female", "Other"
+                ]
+            },
+            {
+                "Name": "DOB",
+                "DisplayName": "Date of Birth",
+                "Type": "date",
+                "Format": "string",
+                "Mutable": true
+            },
+            {
+                "Name": "DOJ",
+                "DisplayName": "Date of Joining",
+                "Type": "date",
+                "Format": "string",
+                "Mutable": true
+            }
+        ],
+        "count": 7
+    }
+}
