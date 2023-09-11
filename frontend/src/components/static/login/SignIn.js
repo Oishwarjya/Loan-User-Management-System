@@ -13,10 +13,12 @@ import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { FormHelperText } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import * as API from '../../services/ApiRequestService';
 import './styles.css';
 
 export default function SignIn() {
+    let navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         uID: "",
@@ -78,11 +80,11 @@ export default function SignIn() {
     const handleSubmit = e => {
         e.preventDefault();
         if(isFormDataValid()) {
-            console.log("All gg");
             setErrors({
                 uID: "",
                 password: ""
             });
+            navigate("/user");
         } else {
         };
     }

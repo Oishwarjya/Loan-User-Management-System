@@ -78,11 +78,12 @@ export default function SignUp() {
     const handleSubmit = e => {
         e.preventDefault();
         if(isFormDataValid()) {
-            console.log("All gg");
             setErrors({
                 uID: "",
                 password: ""
             });
+            
+          window.alert("User added");
         } else {
         }
     }
