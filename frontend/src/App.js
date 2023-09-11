@@ -10,6 +10,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import LogIn from './components/static/login/LogIn';
 import UserDashboard from './components/static/user/UserDashboard';
 import AdminDashboard from './components/static/admin/AdminDashboard';
+import CustomerData from './components/static/admin/customerDataManagement/CustomerDataManagement';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
       <Route path="/login" element={<LogIn />} />
       <Route path="/user" element={<UserDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/customer" element={<CustomerData />} />
     </Routes>
     </>
   );
