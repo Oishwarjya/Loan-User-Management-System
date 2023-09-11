@@ -1,0 +1,35 @@
+.card-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+}
+
+.MuiCardHeader-title {
+    font-family: Montserrat !important;
+    font-weight: 800;
+}
+
+.signUpButton {
+    background-image: linear-gradient(to right,#FAC213 0%,#B20600 0%);
+}
+
+.signUpCard {
+    margin: auto;
+    width: 60%;
+    height: 70%;
+    /* background-image: linear-gradient(-45deg, #434343 0%, black 100%); */
+    background-image: linear-gradient(-45deg, #FAC213 0%, white 120%);
+}
+
+.signInCard {
+    margin: auto;
+    width: 60%;
+    height: 70%;
+    /* background-image: linear-gradient(-45deg, #434343 0%, black 100%); */
+    background-image: linear-gradient(-45deg,#B20600 0%, white 120%);
+}
+
+.signInButton {
+    background-image: linear-gradient(to right,#B20600 0%, #FAC213 0%);
+}
