@@ -6,42 +6,24 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+
+@RequiredArgsConstructor
 @Entity
 @Table(name = "user")
+@Getter
+@Setter
+
+
 public class User {
 
     @Id
-    private String id;
-
+    private String userID;
     @NotBlank(message = "Password is mandatory")
-    @Size(min = 5, message = "Password must be at least 5 characters")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
-
-
-    public User() {
-
-    }
-
-    public User(String id, String password) {
-        this.id = id;
-        this.password = password;
-    }
-
-    
-    @Column(name = "id")
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Column(name = "password", nullable = false)
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

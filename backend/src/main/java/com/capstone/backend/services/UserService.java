@@ -32,10 +32,10 @@ public class UserService{
      public Object login(User user) {
 
          Map<String, Object> object = new HashMap<>();
-         User user1 = userRepository.findById(user.getId()).orElse(null);
+         User user1 = userRepository.findById(user.getUserID()).orElse(null);
          User admin = userRepository.getReferenceById("K123456");
          Pattern pattern = Pattern.compile("[a-z]\\d\\d\\d\\d\\d\\d", Pattern.CASE_INSENSITIVE);
-         Matcher matcher = pattern.matcher(user.getId());
+         Matcher matcher = pattern.matcher(user.getUserID());
         if(matcher.matches())
         {
             if (user1 == null) {
@@ -44,7 +44,7 @@ public class UserService{
              return object;
              }
 
-            if(StringUtils.equals(user.getId(), "K123456")){
+            if(StringUtils.equals(user.getUserID(), "K123456")){
                  if(StringUtils.equals(user.getPassword(),admin.getPassword()))
                  {
                      object.put("authStatus", true);
@@ -82,10 +82,10 @@ public class UserService{
 
     public Object register(User user) {
         Pattern pattern = Pattern.compile("[a-z]\\d\\d\\d\\d\\d\\d", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(user.getId());
+        Matcher matcher = pattern.matcher(user.getUserID());
         Map<String, Object> object = new HashMap<>();
         if (matcher.matches()) {
-            User user1 = userRepository.findById(user.getId()).orElse(null);
+            User user1 = userRepository.findById(user.getUserID()).orElse(null);
             if (user1 == null) {
                 object.put("availStatus", true);
                 userRepository.save(user);
