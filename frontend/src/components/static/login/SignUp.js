@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import { FormHelperText } from '@mui/material';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import axios from 'axios';
 import './styles.css';
 
 export default function SignUp() {
@@ -82,8 +83,26 @@ export default function SignUp() {
                 uID: "",
                 password: ""
             });
-            
-          window.alert("User added");
+          axios.post("http://localhost:8081/api/register",{
+            "id":formData.uID,
+            "password": formData.password
+          },{
+            headers: {
+              "Content-Type": "application/json"
+          }
+          })
+          .then((res) => {
+            console.log(res);
+            if(res.data.hasOwnProperty('availStatus')) {
+              if(res.data.availStatus)
+                window.alert("User added");
+                else window.alert("User registration failed")
+            } else {
+              window.alert("User registration failed. " );
+            }
+          })
+          .catch(err => { window.alert(err)});
+
         } else {
         }
     }

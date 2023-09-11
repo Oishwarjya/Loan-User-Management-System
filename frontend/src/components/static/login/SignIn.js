@@ -14,6 +14,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import * as API from '../../services/ApiRequestService';
 import './styles.css';
 
@@ -84,8 +85,27 @@ export default function SignIn() {
                 uID: "",
                 password: ""
             });
-            navigate("/user");
-        } else {
+            axios.post("http://localhost:8081/api/login",{
+              "id":formData.uID,
+              "password": formData.password
+            },{
+              headers: {
+                "Content-Type": "application/json"
+            }
+            })
+            .then((res) => {
+              console.log(res);
+              if(res.data.hasOwnProperty('authStatus')) {
+                if(res.data.authStatus) {
+                  if(res.data.role == "user") navigate("/user");
+                  else if(res.data.role == "admin") navigate("/admin");
+                }else window.alert("User login failed")
+              } else {
+                window.alert("User login failed. " );
+              }
+            })
+            .catch(err => { window.alert(err)});
+          } else {
         };
     }
 
