@@ -3,14 +3,14 @@
         "dataURL": "/api/",
         "fields": [
             {
-                "Name": "UserID",
+                "Name": "userID",
                 "DisplayName": "Employee ID",
                 "Type": "text",
                 "Format": "string",
                 "Mutable": true
             },
             {
-                "Name": "Password",
+                "Name": "password",
                 "DisplayName": "Password",
                 "Type": "password",
                 "Format": "string",
@@ -23,21 +23,21 @@
         "dataURL": "/api/",
         "fields": [
             {
-                "Name": "UserID",
+                "Name": "userID",
                 "DisplayName": "Employee ID",
                 "Type": "text",
                 "Format": "stringEmpID",
                 "Mutable": true
             },
             {
-                "Name": "Name",
+                "Name": "name",
                 "DisplayName": "Name",
                 "Type": "text",
                 "Format": "string",
                 "Mutable": true
             },
             {
-                "Name": "Designation",
+                "Name": "designation",
                 "DisplayName": "Designation",
                 "Type": "staticlist",
                 "Format": "string",
@@ -47,7 +47,7 @@
                 ]
             },
             {
-                "Name": "Department",
+                "Name": "department",
                 "DisplayName": "Department",
                 "Type": "staticlist",
                 "Format": "string",
@@ -57,7 +57,7 @@
                 ]
             },
             {
-                "Name": "Gender",
+                "Name": "gender",
                 "DisplayName": "Gender",
                 "Type": "staticlist",
                 "Format": "string",
@@ -67,14 +67,14 @@
                 ]
             },
             {
-                "Name": "DOB",
+                "Name": "dob",
                 "DisplayName": "Date of Birth",
                 "Type": "date",
                 "Format": "string",
                 "Mutable": true
             },
             {
-                "Name": "DOJ",
+                "Name": "doj",
                 "DisplayName": "Date of Joining",
                 "Type": "date",
                 "Format": "string",
