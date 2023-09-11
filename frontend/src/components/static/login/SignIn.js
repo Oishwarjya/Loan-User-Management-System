@@ -15,6 +15,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import * as ResourceService from '../../services/ResourceService';
 import * as API from '../../services/ApiRequestService';
 import './styles.css';
 
@@ -80,18 +81,15 @@ export default function SignIn() {
 
     const handleSubmit = e => {
         e.preventDefault();
+        console.log(ResourceService.toResourceMap("employees",[{"userID": "K032540", "password":"12345678"}]));
         if(isFormDataValid()) {
             setErrors({
                 uID: "",
                 password: ""
             });
-            axios.post("http://localhost:8081/api/login",{
+            API.post("/api/login",{
               "id":formData.uID,
               "password": formData.password
-            },{
-              headers: {
-                "Content-Type": "application/json"
-            }
             })
             .then((res) => {
               console.log(res);

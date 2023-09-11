@@ -1,18 +1,17 @@
 import React from 'react';
 import axios from 'axios';
 
-const BASE_URL = "https://localhost:8080";
+const BASE_URL = "http://localhost:8081";
 export function get(url) {
-    return axios.get(BASE_URL+url);
+    return axios.get(BASE_URL+url, {
+        headers: {
+          "Content-Type": "application/json"
+      }});
 }
 
 export function post(url, body) {
-    return axios({
-        url: BASE_URL+url,
-        method: "POST",
+    return axios.post(BASE_URL+url,body,{
         headers: {
-            "Content-Type": "application/json"
-        },
-        data: body
-    });
+          "Content-Type": "application/json"
+      }});
 }
