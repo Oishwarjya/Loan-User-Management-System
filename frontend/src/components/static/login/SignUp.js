@@ -41,32 +41,37 @@ export default function SignUp() {
             ...formData,
             [name]:value
         });
+//        isFormDataValid()
     }
 
     const isFormDataValid = () => {
-        const UID_REGEX = new RegExp(/"[a-z]\d{6}"/);
+        const UID_REGEX = new RegExp(/^[a-z]\d{6}$/i);
         var retVal=true;
-        if(!formData.uID) {
-            setErrors({
-                ...errors,
-                uID: "User ID is required"
-            });
-            retVal=false;
-        }
-        if(formData.password.length<8) {
-            setErrors({
-                ...errors,
-                password: "Minimum password length is 8"
-            });
-            retVal=false;
-        }
-        if(!formData.password) {
-            setErrors({
-                ...errors,
-                password: "password is required"
-            });
-            retVal=false;
-        }
+        var errObj = {
+          uID: "",
+          password: ""
+        };
+        Object.keys(formData).forEach((key) => {
+          if(key=="uID") {
+            if(!formData.uID) {
+              errObj.uID = "User ID is required";
+              retVal=false;
+            } else if(!UID_REGEX.test(formData.uID)) {
+              errObj.uID = "User ID must be an alphabet followed by 6 digits";
+              retVal = false;
+            } else errObj.uID="";
+          }
+          if(key=="password") {
+            if(!formData.password) {
+              errObj.password = "Password is required";
+              retVal=false;
+            } else if(formData.password.length<8) {
+              errObj.password = "Minimum length of password must be 8";
+              retVal=false;
+            } else errObj.password="";
+          }
+        });
+        setErrors({...errObj});
         return retVal;
     };
 
@@ -79,7 +84,7 @@ export default function SignUp() {
                 password: ""
             });
         } else {
-        };
+        }
     }
 
   return (
