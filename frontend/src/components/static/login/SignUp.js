@@ -94,15 +94,15 @@ export default function SignUp() {
           .then((res) => {
             console.log(res);
             if(res.data.hasOwnProperty('availStatus')) {
-              if(res.data.availStatus)
-                window.alert("User added");
-                else window.alert("User registration failed")
+              if(res.data.availStatus) {
+                window.alert("User Added");
+                setFormData({ uID: "", password: ""});
+              } else window.alert("User registration failed")
             } else {
               window.alert("User registration failed. " );
             }
           })
           .catch(err => { window.alert(err)});
-
         } else {
         }
     }
@@ -131,19 +131,20 @@ export default function SignUp() {
             name="password"
             value={formData.password}
             onChange={handleInputChange}     
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
+            // type={showPassword ? 'text' : 'password'}
+            type="password"
+            // endAdornment={
+            //   <InputAdornment position="end">
+            //     <IconButton
+            //       aria-label="toggle password visibility"
+            //       onClick={handleClickShowPassword}
+            //       onMouseDown={handleMouseDownPassword}
+            //       edge="end"
+            //     >
+            //       {showPassword ? <VisibilityOff /> : <Visibility />}
+            //     </IconButton>
+            //   </InputAdornment>
+            // }
             error={errors.password!=""}
             label="Password"
           />
