@@ -7,6 +7,8 @@ import com.capstone.backend.repositories.UserRepository;
 
 
 import com.capstone.backend.entities.User;
+import com.capstone.backend.exceptions.TableEmptyException;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +26,7 @@ public class UserService{
     }
 
 
-    public List < User > getAllUsers() {
+    public List < User > getAllUsers()  {
         return userRepository.findAll();
     }
 
