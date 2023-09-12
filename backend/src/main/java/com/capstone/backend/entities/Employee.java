@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -37,9 +39,11 @@ public class Employee {
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    //@JsonFormat(pattern = "yyyy-MM-DD")
     private Date dob;
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    //@JsonFormat(pattern = "yyyy-MM-DD")
     private Date doj;
 }
