@@ -1,0 +1,31 @@
+.card-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:90%;
+}
+
+.MuiCardHeader-title {
+    font-family: Montserrat !important;
+    font-weight: 800;
+    color: white
+}
+
+.card {
+    margin: auto;
+    width: 70%;
+    height: 70%;
+    background-image: linear-gradient(270deg, black 0%, #7e1406 120%);
+}
+
+.left-button {
+    background-image: linear-gradient(to right,#B20600 0%, #FAC213 300%);
+}
+
+.middle-button {
+    background-image: linear-gradient(to right,#B20600 -100%, #FAC213 200%);
+}
+
+.right-button {
+    background-image: linear-gradient(to right,#B20600 -200%, #FAC213 90%);
+}
