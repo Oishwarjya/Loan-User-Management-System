@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.User;
+import com.capstone.backend.exceptions.RecordAlreadyExistsException;
+import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.services.EmployeeService;
 import com.capstone.backend.services.UserService;
 
@@ -30,7 +32,7 @@ public class EmployeeController {
 
     @PostMapping("/employee")
     @ResponseBody
-    public Map<String,String> addEmp(@Valid @RequestBody Employee emp) {
+    public Map<String,String> addEmp(@Valid @RequestBody Employee emp) throws RecordAlreadyExistsException,ResourceNotFoundException {
 
         return employeeService.addEmp(emp);
     }
