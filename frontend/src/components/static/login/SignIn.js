@@ -95,8 +95,8 @@ export default function SignIn() {
               console.log(res);
               if(res.data.hasOwnProperty('authStatus')) {
                 if(res.data.authStatus) {
-                  if(res.data.role == "user") navigate("/user");
-                  else if(res.data.role == "admin") navigate("/admin");
+                  if(res.data.role == "user") navigate("/user/"+formData.userID);
+                  else if(res.data.role == "admin") navigate("/admin/"+formData.userID);
                 }else window.alert("User login failed")
               } else {
                 window.alert("User login failed. " );

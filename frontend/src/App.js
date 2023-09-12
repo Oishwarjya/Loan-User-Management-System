@@ -11,6 +11,8 @@ import LogIn from './components/static/login/LogIn';
 import UserDashboard from './components/static/user/UserDashboard';
 import AdminDashboard from './components/static/admin/AdminDashboard';
 import CustomerData from './components/static/admin/customerDataManagement/CustomerDataManagement';
+import LoanCardManagement from './components/static/admin/loanCardManagement/LoanCardManagement';
+import ItemsMasterData from './components/static/admin/itemsMasterData/ItemsMasterData';
 
 function App() {
   return (
@@ -31,9 +33,11 @@ function App() {
     <Routes>
       <Route path="/" element={<Navigate to="/login" />}/>
       <Route path="/login" element={<LogIn />} />
-      <Route path="/user" element={<UserDashboard />} />
-      <Route path="/admin" element={<AdminDashboard />} />
-      <Route path="/customer" element={<CustomerData />} />
+      <Route path="/user/:userID" element={<UserDashboard />} />
+      <Route exact path="/admin/:userID" element={<AdminDashboard />} />
+      <Route path="/admin/:userID/customer" element={<CustomerData />} />
+      <Route path="/admin/:userID/loancard" element={<LoanCardManagement />} />
+      <Route path="/admin/:userID/items" element={<ItemsMasterData />} />
     </Routes>
     </>
   );
