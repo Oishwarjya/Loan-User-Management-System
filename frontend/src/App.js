@@ -1,24 +1,41 @@
-import logo from './logo.svg';
 import './App.css';
+import {React} from 'react';
+import {Routes, Route, Link, Navigate} from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import HomeIcon from "@mui/icons-material/Home";
+import LogIn from './components/static/login/LogIn';
+import UserDashboard from './components/static/user/UserDashboard';
+import AdminDashboard from './components/static/admin/AdminDashboard';
+import CustomerData from './components/static/admin/customerDataManagement/CustomerDataManagement';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="fixed" className='tool-bar'>
+        <Toolbar>
+          <Typography style={{color:'black'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Loan Management System
+          </Typography>
+          <Link to="/">
+            <HomeIcon className="home-icon" style={{color:"black"}} />
+            </Link>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+    </Box>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />}/>
+      <Route path="/login" element={<LogIn />} />
+      <Route path="/user" element={<UserDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/customer" element={<CustomerData />} />
+    </Routes>
+    </>
   );
 }
 

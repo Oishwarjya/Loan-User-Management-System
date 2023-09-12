@@ -1,0 +1,11 @@
+.card-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+}
+
+.MuiCardHeader-title {
+    font-family: Montserrat !important;
+    font-weight: 800;
+}
