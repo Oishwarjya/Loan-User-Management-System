@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import { FormHelperText } from '@mui/material';
+import * as API from '../../services/ApiRequestService';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import './styles.css';
@@ -19,11 +20,11 @@ import './styles.css';
 export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        uID: "",
+        userID: "",
         password: ""
     });
     const [errors, setErrors] = useState({
-        uID: "",
+        userID: "",
         password: ""
     });
 
@@ -46,21 +47,21 @@ export default function SignUp() {
     }
 
     const isFormDataValid = () => {
-        const UID_REGEX = new RegExp(/^[a-z]\d{6}$/i);
+        const userID_REGEX = new RegExp(/^[a-z]\d{6}$/i);
         var retVal=true;
         var errObj = {
-          uID: "",
+          userID: "",
           password: ""
         };
         Object.keys(formData).forEach((key) => {
-          if(key=="uID") {
-            if(!formData.uID) {
-              errObj.uID = "User ID is required";
+          if(key=="userID") {
+            if(!formData.userID) {
+              errObj.userID = "User ID is required";
               retVal=false;
-            } else if(!UID_REGEX.test(formData.uID)) {
-              errObj.uID = "User ID must be an alphabet followed by 6 digits";
+            } else if(!userID_REGEX.test(formData.userID)) {
+              errObj.userID = "User ID must be an alphabet followed by 6 digits";
               retVal = false;
-            } else errObj.uID="";
+            } else errObj.userID="";
           }
           if(key=="password") {
             if(!formData.password) {
@@ -80,23 +81,19 @@ export default function SignUp() {
         e.preventDefault();
         if(isFormDataValid()) {
             setErrors({
-                uID: "",
+                userID: "",
                 password: ""
             });
-          axios.post("http://localhost:8081/api/register",{
-            "id":formData.uID,
+          API.post("/api/register",{
+            "userID":formData.userID,
             "password": formData.password
-          },{
-            headers: {
-              "Content-Type": "application/json"
-          }
           })
           .then((res) => {
             console.log(res);
             if(res.data.hasOwnProperty('availStatus')) {
               if(res.data.availStatus) {
                 window.alert("User Added");
-                setFormData({ uID: "", password: ""});
+                setFormData({ userID: "", password: ""});
               } else window.alert("User registration failed")
             } else {
               window.alert("User registration failed. " );
@@ -117,11 +114,11 @@ export default function SignUp() {
             <TextField 
                 variant="outlined"
                 label="User ID"
-                name="uID"
-                value={formData.uID}
+                name="userID"
+                value={formData.userID}
                 onChange={handleInputChange}
-                error={errors.uID!=""} 
-                helperText={errors.uID}
+                error={errors.userID!=""} 
+                helperText={errors.userID}
                 />
         </FormControl>
         <FormControl sx={{ m: 1, width: '25ch'}} variant="outlined">
