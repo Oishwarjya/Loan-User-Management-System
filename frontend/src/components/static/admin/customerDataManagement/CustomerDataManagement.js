@@ -1,10 +1,25 @@
 import { React, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Card, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-
+import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import './styles.css';
+import data from '../../../../resourcemap.config.json';
+// let data = require('../../../../resourcemap.config.json');
 
 export default function CustomerData() {
+    
     const [formData, setFormData] = useState({
+        empId: "",
+        empName: "",
+        designation: data.employees.fields[2].Options[0],
+        department: data.employees.fields[3].Options[0],
+        dob: "",
+        doj: "",
+        gender: data.employees.fields[4].Options[0]
+    });
+    const [errorData, setErrorData] = useState({
         empId: "",
         empName: "",
         designation: "",
@@ -13,40 +28,241 @@ export default function CustomerData() {
         doj: "",
         gender: ""
     });
+    let errCommonObj = {
+        empId: "",
+        empName: "",
+        designation: "",
+        department: "",
+        dob: "",
+        doj: "",
+        gender: ""
+    };
+    const emptyErrorMsg = "Field can't be empty";
     const handleInputChange = (e) => {
         const {name, value} = e.target;
+        console.log(typeof value);
         setFormData({
             ...formData,
             [name]:value
         });
     };
+    const getDate = (e) => {
+        return e.$y.toString() + (e.$M+1).toString() + e.$D.toString();
+    }
+    const handleDobChange = (e) => {
+        setFormData({
+            ...formData,
+            ["dob"]: getDate(e)
+        });
+    }
+    const handleDojChange = (e) => {
+        setFormData({
+            ...formData,
+            ["doj"]: getDate(e)
+        });
+    }
+
     const handleError = (err) => {
         window.alert(err);
         console.log(err);
     };
-    const getDesignations = () => {
-        return (<MenuItem value={'Manager'}>{'Manager'}</MenuItem>);
-    };
-    const getDepartments = () => {
-        return (<MenuItem value={'Technology'}>{'Technology'}</MenuItem>);
-    };
-    const getGenders = () => {
-        return (<MenuItem value={'M'}>{'Male'}</MenuItem>);
-    };
+    const isEmpIdValid = (emp) => {
+        const UID_REGEX = new RegExp(/^[a-z]\d{6}$/i);
+        console.log(emp);
+        if(!emp){
+            console.log("Employee Id is empty!")
+            return emptyErrorMsg;
+        }
+        else if(!UID_REGEX.test(emp)) {
+            return "User ID must be an alphabet followed by 6 digits";
+        }
+        return "valid";
+    }
+    const isEmpNameValid = (name) => {
+        if(!name){
+            return emptyErrorMsg;
+        }
+        else if(name.length<5) {
+            return "Employee Name should be greater than 5 characters";
+        }
+        else {
+            return "valid";
+        }
+    }
+    const isDesignationValid = (designation) => {
+        if(!designation) {
+            return emptyErrorMsg;
+        }
+        else if(data.employees.fields[2].Options.includes(designation)) {
+            return "valid";
+        }
+        return designation + " is not in the database"
+    }
+    const isDepartmentValid = (dept) => {
+        if(!dept) {
+            return emptyErrorMsg;
+        }
+        else if(data.employees.fields[3].Options.includes(dept)) {
+            return "valid";
+        }
+        return dept + " is not in the database";
+    }
+    const isGenderValid = (gender) => {
+        if(!gender) {
+            return emptyErrorMsg;
+        }
+        else if(data.employees.fields[4].Options.includes(gender)) {
+            return "valid";
+        }
+        return gender + " is not in the database";
+    }
+    const changeErrorData = (name, value) => {
+        // let errObj = errorData;
+        // errObj[name] = value;
+        errCommonObj[name] = value;
+        // setErrorData({errObj});
+    }
+    const areDatesValid = (dob, doj) => {
+        let isValid = true;
+        //for dob
+        let birthYear = Number(dob.slice(0,4));
+        let birthMonth = Number(dob.slice(4,2));
+        let birthDate = Number(dob.slice(6, 2));
+        //Age should be greater than 18 and less than 100
+        let today = new Date();
+        let nowYear = today.getFullYear();
+        let nowMonth = today.getMonth();
+        let nowDate = today.getDate();
+
+        let age = nowYear-birthYear;
+        let age_month = nowMonth-birthMonth;
+        let age_days = nowDate-birthDate;
+
+        if(age_month<0 || (age_month==0 && age_days<0)) {
+            age-=1;
+        }
+        if(age>100) {
+            changeErrorData("dob", "Age cannot be greater than 100.");
+            isValid = false;
+        }else if(dob && ((age==18 && age_month<=0 && age_days<=0) || age<18)) {
+            changeErrorData("dob", "Age should be more than 18 years.");
+            isValid = false;
+        } else {
+            changeErrorData("dob", "");
+        }
+        
+        //for doj
+
+        let joinYear = Number(doj.slice(0,4));
+        let joinMonth = Number(doj.slice(4,2));
+        let joinDate = Number(doj.slice(6, 2));
+
+        if(joinYear>nowYear || (joinYear==nowYear && joinMonth>nowMonth) || (joinYear==nowYear && joinMonth==nowMonth && joinDate>nowDate)) {
+            changeErrorData("doj", "Future Date cannot be added");
+            isValid = false;
+        }
+        else if(doj && (joinYear-birthYear<18 || (joinYear-birthYear==18 && birthMonth>joinMonth) || (joinYear-birthYear==18 && birthMonth==joinMonth && birthDate>joinDate))){
+            changeErrorData("doj", "There should be at least 18 years of gap between Date of Birth and Date of Joining.")
+            isValid = false;
+        } else {
+            changeErrorData("doj", "");
+        }
+        if(!dob) {
+            changeErrorData('dob', emptyErrorMsg);
+            isValid=false;
+        }
+        if(!doj) {
+            changeErrorData('doj', emptyErrorMsg);
+            isValid=false;
+        }
+
+    }
+    const areAllFieldsValid = () => {
+        let isValid = true
+        let validationText = isEmpIdValid(formData.empId);
+        if(validationText!="valid") {
+            changeErrorData("empId", validationText);
+            isValid = false;
+        } else {
+            changeErrorData("empId", "");
+        }
+        validationText = isEmpNameValid(formData.empName);
+        if(validationText!="valid") {
+            changeErrorData("empName", validationText);
+            isValid = false;
+        } else {
+            changeErrorData("empName", "");
+        }
+        validationText = isDesignationValid(formData.designation);
+        if(validationText!="valid") {
+            changeErrorData("designation", validationText);
+            isValid = false;
+        } else {
+            changeErrorData("designation", "");
+        }
+        validationText = isDepartmentValid(formData.department);
+        if(validationText!="valid") {
+            changeErrorData("department", validationText);
+            isValid = false;
+        } else {
+            changeErrorData("department", "");
+        }
+        validationText = isGenderValid(formData.gender);
+        if( validationText!="valid") {
+            changeErrorData("gender", validationText);
+            isValid = false;
+        } else {
+            changeErrorData("gender", "");
+        }
+        if(!areDatesValid(formData.dob, formData.doj)) {
+            isValid = false;
+        }
+        return isValid;
+    }
+    const handleSubmit = (e) => {
+        if(areAllFieldsValid()) {
+            console.log("All Fields are valid");
+        }
+        else {
+            console.log(errorData);
+            console.log("Invalid Fields");
+            setErrorData(errCommonObj);
+        }
+    }
+    // const getDesignations = () => {
+    //     data.employees.fields[2].Options.map((designation, ind)=>{
+    //         return (<MenuItem value={designation}>{designation}</MenuItem>);
+    //     });
+    //     return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
+    // };
+    // const getDepartments = () => {
+    //     data.employees.fields[3].Options.map((dept, ind)=>{
+    //         return (<MenuItem value={dept}>{dept}</MenuItem>);
+    //     });
+        
+    //     return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
+    // };
+    // const getGenders = () => {
+    //     data.employees.fields[4].Options.map((gender, ind)=>{
+    //         return (<MenuItem value={gender}>{gender}</MenuItem>);
+    //     });
+    //         return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
+    // };
     return (
     <div className='card-div'>
         <Card className='customerData'>
             <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title="Add Customer Data" />
-            <CardContent>
-                <div>
-                    <FormControl>
+            <CardContent className='card-content-container'>
+                <div className='field-outer-container'>
+                    <FormControl className='field-container'>
                         <TextField
                         variant="outlined"
                         label="Employee Id"
                         name="empId"
                         value={formData.empId}
                         onChange={handleInputChange}
-                        onError={handleError}/>
+                        error={errorData.empId!=''}
+                        helperText={errorData.empId}/>
                     </FormControl>
                     <FormControl>
                         <TextField
@@ -55,44 +271,84 @@ export default function CustomerData() {
                         name="empName"
                         value={formData.empName}
                         onChange={handleInputChange}
-                        onError={handleError}/>
+                        error={errorData.empName!=''}
+                        helperText={errorData.empName} />
                     </FormControl>
-                    <FormControl>
+                </div>
+                <div className='field-outer-container'>
+                    <FormControl className='field-container'>
                         <InputLabel htmlFor="designation">Designation</InputLabel>
                         <Select
                         label="Designation"
-                        value={formData.designation}
+                        defaultValue={data.employees.fields[2].Options[0]}
                         onChange={handleInputChange}
                         onError={handleError}>
-                            {getDesignations}
+                            {data.employees.fields[2].Options.map((designation, ind)=>{
+                                return (<MenuItem value={designation} key={ind}>{designation}</MenuItem>);
+                            })}
                         </Select>
                     </FormControl>
-                    <FormControl>
+                    <FormControl className='field-container'>
                         <InputLabel htmlFor="department">Department</InputLabel>
                         <Select
                         label="Department"
-                        value={formData.department}
+                        defaultValue={data.employees.fields[3].Options[0]}
                         onChange={handleInputChange}
                         onError={handleError}>
-                            {getDepartments}
+                            {data.employees.fields[3].Options.map((dept, ind)=>{
+                                return (<MenuItem value={dept} key={ind}>{dept}</MenuItem>);
+                            })}
                         </Select>
                     </FormControl>
-                    <FormControl>
+                    <FormControl className='field-container'>
                         <InputLabel htmlFor="gender">Gender</InputLabel>
                         <Select
                         label="Gender"
-                        value={formData.gender}
+                        defaultValue={data.employees.fields[4].Options[0]}
                         onChange={handleInputChange}
                         onError={handleError}>
-                            {getGenders}
+                            {data.employees.fields[4].Options.map((gender, ind)=>{
+                                return (<MenuItem value={gender} key={ind}>{gender}</MenuItem>);
+                            })}
                         </Select>
                     </FormControl>
+                </div>
+                <div className='field-outer-container'>
                     <FormControl>
-                        <InputLabel htmlFor="dob">Date of Birth</InputLabel>
-                        
+                        {/* <InputLabel htmlFor="dob">Date of Birth</InputLabel> */}
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DateField']}>
+                                <DateField
+                                label="Date of Birth"
+                                onChange={handleDobChange}
+                                helperText={errorData.dob}
+                                error={errorData.dob!=''}
+                                />
+                            </DemoContainer>
+                        </LocalizationProvider>
+                    </FormControl>
+                    <FormControl>
+                        {/* <InputLabel htmlFor="doj">Date of Joining</InputLabel> */}
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DateField']}>
+                                <DateField
+                                label="Date of Joining"
+                                onChange={handleDojChange}
+                                helperText={errorData.doj}
+                                error={errorData.doj!=''}
+                                />
+                            </DemoContainer>
+                        </LocalizationProvider>
                     </FormControl>
                 </div>
             </CardContent>
+            <CardActions className="submit-btn-container">
+                <Button
+                variant="contained"
+                onClick={handleSubmit}>
+                    Add Customer Data
+                </Button>
+            </CardActions>
         </Card>
     </div>);
 }
