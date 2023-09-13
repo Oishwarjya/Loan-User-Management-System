@@ -1,6 +1,7 @@
 package com.capstone.backend.exceptions;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +16,33 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+@RestControllerAdvice
+public class CustomExceptionHandler  {
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	// protected ResponseEntity<Object> handleMethodArugmentNotValid(MethodArgumentNotValidException ex,HttpHeaders headers,HttpStatus status, WebRequest request)
+	// {
+		
+	// 	Map<String,Object> body = new HashMap<>();
+	// 	body.put("statusCode",HttpStatus.BAD_REQUEST.value());
+	// 	body.put("message","Validation Error(One or more fields are incorrect)");
+	// 	return new ResponseEntity<Object>(body,headers, HttpStatus.BAD_REQUEST);
+	// }
+	public Map<String,Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex)
+	{
+		Map<String,String> errorsMap = new HashMap<>();
+		Map<String,Object> response =  new HashMap<>();
+		ex.getBindingResult().getFieldErrors().forEach(error ->{
+			errorsMap.put(error.getField(),error.getDefaultMessage());
+		});
+		response.put("statusCode","400");
+		response.put("message",errorsMap);
+		return response ;
+	}
 	
 	@ExceptionHandler(value = TableEmptyException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
@@ -42,5 +65,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
 	}
+
+	
 
 }
