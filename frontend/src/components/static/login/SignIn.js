@@ -81,7 +81,6 @@ export default function SignIn() {
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log(ResourceService.toResourceMap("employees",[{"userID": "K032540", "password":"12345678"}]));
         if(isFormDataValid()) {
             setErrors({
                 userID: "",
@@ -92,7 +91,6 @@ export default function SignIn() {
               "password": formData.password
             })
             .then((res) => {
-              console.log(res);
               if(res.data.hasOwnProperty('authStatus')) {
                 if(res.data.authStatus) {
                   if(res.data.role == "user") navigate("/user/"+formData.userID);
@@ -110,7 +108,7 @@ export default function SignIn() {
   return (
     <div className='card-div'>
     <Card className='signInCard' sx={{ minWidth: 275 }}>
-      <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title="Sign In" />
+      <CardHeader className="signin-signup-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title="Sign In" />
       <CardContent>
         <div>
         <FormControl sx={{ m: 1, width: '25ch'}} variant="outlined">

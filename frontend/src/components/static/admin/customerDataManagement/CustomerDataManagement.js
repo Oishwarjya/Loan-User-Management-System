@@ -3,16 +3,19 @@ import TextField from '@mui/material/TextField';
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import './styles.css';
 import data from '../../../../resourcemap.config.json';
-// let data = require('../../../../resourcemap.config.json');
+import * as API from '../../../services/ApiRequestService';
 
 export default function CustomerData() {
-    
+    const { userID } = useParams();
+    var navigate = useNavigate();
+
     const [formData, setFormData] = useState({
-        empId: "",
-        empName: "",
+        userID: "",
+        name: "",
         designation: data.employees.fields[2].Options[0],
         department: data.employees.fields[3].Options[0],
         dob: "",
@@ -20,8 +23,8 @@ export default function CustomerData() {
         gender: data.employees.fields[4].Options[0]
     });
     const [errorData, setErrorData] = useState({
-        empId: "",
-        empName: "",
+        userID: "",
+        name: "",
         designation: "",
         department: "",
         dob: "",
@@ -29,8 +32,8 @@ export default function CustomerData() {
         gender: ""
     });
     let errCommonObj = {
-        empId: "",
-        empName: "",
+        userID: "",
+        name: "",
         designation: "",
         department: "",
         dob: "",
@@ -40,14 +43,16 @@ export default function CustomerData() {
     const emptyErrorMsg = "Field can't be empty";
     const handleInputChange = (e) => {
         const {name, value} = e.target;
-        console.log(typeof value);
         setFormData({
             ...formData,
             [name]:value
         });
     };
     const getDate = (e) => {
-        return e.$y.toString() + (e.$M+1).toString() + e.$D.toString();
+        let yyyy = e.$y.toString();
+        let mm = (e.$M+1).toString().length==1?("0"+(e.$M+1).toString()):(e.$M+1).toString();
+        let dd = (e.$D).toString().length==1?("0"+(e.$D).toString()):(e.$D).toString();
+        return yyyy+"-"+mm+"-"+dd;
     }
     const handleDobChange = (e) => {
         setFormData({
@@ -64,13 +69,10 @@ export default function CustomerData() {
 
     const handleError = (err) => {
         window.alert(err);
-        console.log(err);
     };
-    const isEmpIdValid = (emp) => {
+    const isuserIDValid = (emp) => {
         const UID_REGEX = new RegExp(/^[a-z]\d{6}$/i);
-        console.log(emp);
         if(!emp){
-            console.log("Employee Id is empty!")
             return emptyErrorMsg;
         }
         else if(!UID_REGEX.test(emp)) {
@@ -78,7 +80,7 @@ export default function CustomerData() {
         }
         return "valid";
     }
-    const isEmpNameValid = (name) => {
+    const isnameValid = (name) => {
         if(!name){
             return emptyErrorMsg;
         }
@@ -126,18 +128,17 @@ export default function CustomerData() {
         let isValid = true;
         //for dob
         let birthYear = Number(dob.slice(0,4));
-        let birthMonth = Number(dob.slice(4,2));
-        let birthDate = Number(dob.slice(6, 2));
+        let birthMonth = Number(dob.slice(5,7));
+        let birthDate = Number(dob.slice(8, 10));
         //Age should be greater than 18 and less than 100
         let today = new Date();
         let nowYear = today.getFullYear();
-        let nowMonth = today.getMonth();
+        let nowMonth = today.getMonth()+1;
         let nowDate = today.getDate();
 
         let age = nowYear-birthYear;
         let age_month = nowMonth-birthMonth;
         let age_days = nowDate-birthDate;
-
         if(age_month<0 || (age_month==0 && age_days<0)) {
             age-=1;
         }
@@ -150,13 +151,11 @@ export default function CustomerData() {
         } else {
             changeErrorData("dob", "");
         }
-        
         //for doj
 
         let joinYear = Number(doj.slice(0,4));
-        let joinMonth = Number(doj.slice(4,2));
-        let joinDate = Number(doj.slice(6, 2));
-
+        let joinMonth = Number(doj.slice(5,7));
+        let joinDate = Number(doj.slice(8,10));
         if(joinYear>nowYear || (joinYear==nowYear && joinMonth>nowMonth) || (joinYear==nowYear && joinMonth==nowMonth && joinDate>nowDate)) {
             changeErrorData("doj", "Future Date cannot be added");
             isValid = false;
@@ -175,23 +174,23 @@ export default function CustomerData() {
             changeErrorData('doj', emptyErrorMsg);
             isValid=false;
         }
-
+        return isValid;
     }
     const areAllFieldsValid = () => {
-        let isValid = true
-        let validationText = isEmpIdValid(formData.empId);
+        let isValid = true;
+        let validationText = isuserIDValid(formData.userID);
         if(validationText!="valid") {
-            changeErrorData("empId", validationText);
+            changeErrorData("userID", validationText);
             isValid = false;
         } else {
-            changeErrorData("empId", "");
+            changeErrorData("userID", "");
         }
-        validationText = isEmpNameValid(formData.empName);
+        validationText = isnameValid(formData.name);
         if(validationText!="valid") {
-            changeErrorData("empName", validationText);
+            changeErrorData("name", validationText);
             isValid = false;
         } else {
-            changeErrorData("empName", "");
+            changeErrorData("name", "");
         }
         validationText = isDesignationValid(formData.designation);
         if(validationText!="valid") {
@@ -217,16 +216,26 @@ export default function CustomerData() {
         if(!areDatesValid(formData.dob, formData.doj)) {
             isValid = false;
         }
+        setErrorData({...errCommonObj});
         return isValid;
     }
     const handleSubmit = (e) => {
         if(areAllFieldsValid()) {
-            console.log("All Fields are valid");
+            API.post("/api/employee",{...formData})
+              .then((res) => {
+                if(res.data.hasOwnProperty('statusCode')) {
+                    if(res.data.statusCode>=200 && res.data.statusCode < 300) {
+                        window.alert("Employee Added");
+                        navigate('/admin/'+userID);
+                    } else window.alert("Error " + res.data.message);
+                } else {
+                  window.alert("Employee addition failed" );
+                }
+              })
+              .catch(err => { window.alert(err)});
         }
         else {
-            console.log(errorData);
-            console.log("Invalid Fields");
-            setErrorData(errCommonObj);
+            console.log(formData);
         }
     }
     // const getDesignations = () => {
@@ -251,28 +260,28 @@ export default function CustomerData() {
     return (
     <div className='card-div'>
         <Card className='customerData'>
-            <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title="Add Customer Data" />
+            <CardHeader className="customer-form-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title="Add Customer Data" />
             <CardContent className='card-content-container'>
                 <div className='field-outer-container'>
                     <FormControl className='field-container'>
                         <TextField
                         variant="outlined"
                         label="Employee Id"
-                        name="empId"
-                        value={formData.empId}
+                        name="userID"
+                        value={formData.userID}
                         onChange={handleInputChange}
-                        error={errorData.empId!=''}
-                        helperText={errorData.empId}/>
+                        error={errorData.userID!=''}
+                        helperText={errorData.userID}/>
                     </FormControl>
                     <FormControl>
                         <TextField
                         variant="outlined"
                         label="Employee Name"
-                        name="empName"
-                        value={formData.empName}
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
-                        error={errorData.empName!=''}
-                        helperText={errorData.empName} />
+                        error={errorData.name!=''}
+                        helperText={errorData.name} />
                     </FormControl>
                 </div>
                 <div className='field-outer-container'>
