@@ -21,7 +21,7 @@ export default function AdminDashboard() {
         <div className='card-container'>
             <div className='card-div'>
                 <Card className='left-card' sx={{ minWidth: 275 }}>
-                    <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Customer Data Management"} />
+                    <CardHeader className="admin-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Customer Data Management"} />
                     <CardContent>
                         <Typography style={{color:'white', textAlign:'center'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Screen to add, edit and delete user biodata from the application...
@@ -39,7 +39,7 @@ export default function AdminDashboard() {
             </div>
             <div className='card-div'>
                 <Card className='middle-card' sx={{ minWidth: 275 }}>
-                    <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Loan Card Management"} />
+                    <CardHeader className="admin-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Loan Card Data Management"} />
                     <CardContent>
                         <Typography style={{color:'white', textAlign:'center'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Screen to add, edit and delete loan cards from the application...
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
             </div>
             <div className='card-div'>
                 <Card className='right-card' sx={{ minWidth: 275 }}>
-                    <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Items Master Data Management"} />
+                    <CardHeader className="admin-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Items Master Data Management"} />
                     <CardContent>
                         <Typography style={{color:'white', textAlign:'center'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Screen to add, edit and delete items data from the application...

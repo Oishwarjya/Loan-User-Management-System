@@ -21,7 +21,7 @@ export default function UserDashboard() {
         <div className='card-container'>
             <div className='card-div'>
                 <Card className='left-user-card' sx={{ minWidth: 275 }}>
-                    <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title={"View Loans"} />
+                    <CardHeader className="user-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title={"View Loans"} />
                     <CardContent>
                         <Typography style={{color:'white', textAlign:'center'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Screen to view all active loans...
@@ -39,7 +39,7 @@ export default function UserDashboard() {
             </div>
             <div className='card-div'>
                 <Card className='middle-user-card' sx={{ minWidth: 275 }}>
-                    <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Apply For Loan"} />
+                    <CardHeader className="user-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title={"Apply For Loan"} />
                     <CardContent>
                         <Typography style={{color:'white', textAlign:'center'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Screen to fill an application for a loan...
@@ -57,7 +57,7 @@ export default function UserDashboard() {
             </div>
             <div className='card-div'>
                 <Card className='right-user-card' sx={{ minWidth: 275 }}>
-                    <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title={"View Items Purchased"} />
+                    <CardHeader className="user-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title={"View Items Purchased"} />
                     <CardContent>
                         <Typography style={{color:'white', textAlign:'center'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Screen to view history of purchased items...
