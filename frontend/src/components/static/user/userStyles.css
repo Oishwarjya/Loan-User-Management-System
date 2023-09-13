@@ -19,24 +19,24 @@
     color: white
 }
 
-.left-card {
+.left-user-card {
     margin: auto;
     width: 70%;
-    height: 70%;
+    height: 50%;
     background-image: linear-gradient(to right, black 0%, #7e1406 300%);
 }
 
-.middle-card {
+.middle-user-card {
     margin: auto;
     width: 70%;
-    height: 70%;
+    height: 50%;
     background-image: linear-gradient(to right, black -100%, #7e1406 200%);
 }
 
-.right-card {
+.right-user-card {
     margin: auto;
     width: 70%;
-    height: 70%;
+    height: 50%;
     background-image: linear-gradient(to right, black -200%, #7e1406 100%);
 }
 
