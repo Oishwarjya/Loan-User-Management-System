@@ -9,3 +9,17 @@
     font-family: Montserrat !important;
     font-weight: 800;
 }
+.field-outer-container {
+    display: flex;
+    justify-content: space-between;
+    padding:5px;
+}
+.field-container{
+    flex-grow: 1;
+}
+.submit-btn-container{
+    justify-content: space-around;
+}
+.card-content-container{
+    padding: 5px;
+}
