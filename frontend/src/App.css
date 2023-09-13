@@ -12,8 +12,14 @@ div {
   font-size: 32px;
 }
 
-.home-icon:hover{
+.home-icon:hover {
   color: #B20600 !important;
-  transition: 0.3s color;
+  transition: 0.2s color;
+  transition-timing-function: ease-in;
+}
+
+.logout-icon:hover {
+  color: #B20600 !important;
+  transition: 0.2s color;
   transition-timing-function: ease-in;
 }
