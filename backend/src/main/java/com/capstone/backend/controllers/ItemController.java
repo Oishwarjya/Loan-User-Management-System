@@ -35,12 +35,13 @@ public class ItemController {
     private ItemService itemService;
     
 
-    @PostMapping("/employee")
-    @ResponseBody
-    public Map<String,String> addEmp(@Valid @RequestBody Item item) throws RecordAlreadyExistsException,ResourceNotFoundException {
+  //  @PostMapping("/employee")
+ //   @ResponseBody
 
-        return employeeService.addEmp(emp);
-    }
+    //public Map<String,String> addEmp(@Valid @RequestBody Item item) throws RecordAlreadyExistsException,ResourceNotFoundException {
+
+      //  return employeeService.addEmp(emp);
+    //}
 
 
 
