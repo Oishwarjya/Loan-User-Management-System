@@ -64,6 +64,13 @@ public class EmployeeController {
         return employeeService.deleteEmp(id);
     }
 
+    @GetMapping("/employees/onboard")
+    public Map<String,Object> getOnBoardEmp() throws TableEmptyException
+    {
+        return employeeService.getOnBoardEmp();
+    }
+
+
 
 
 
