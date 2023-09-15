@@ -1,6 +1,7 @@
 package com.capstone.backend.services;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.tomcat.util.file.ConfigurationSource.Resource;
@@ -12,6 +13,7 @@ import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.User;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
+import com.capstone.backend.exceptions.TableEmptyException;
 import com.capstone.backend.repositories.EmployeeRepository;
 import com.capstone.backend.repositories.UserRepository;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
@@ -54,6 +56,58 @@ public class EmployeeService {
       return object;
     }
 
+    public List<Employee> getAllEmp() throws TableEmptyException
+
+    {
+            List<Employee> empList = employeeRepository.findAll();
+            if(empList.isEmpty())
+            {
+                  throw new TableEmptyException("Employee table is empty");
+            }
+            else
+            {
+                  return empList;
+            }
+      }
+
+      public Map<String,String> updateEmp(Employee emp) throws ResourceNotFoundException
+      {
+          Map<String, String> object = new HashMap<>();
+      
+          Employee e = employeeRepository.findById(emp.getUserID()).orElse(null);
+          if(e == null)
+          {
+                throw new ResourceNotFoundException("Employee with the given ID does not exist");
+            
+          }
+          else
+          {
+            employeeRepository.deleteById(emp.getUserID());
+            employeeRepository.save(emp);
+             object.put("statusCode", "200");
+            object.put("message", "Employee updated successfully");
+          }
+          return object;
+      }
+
+      public Map<String,String> deleteEmp(String id) throws ResourceNotFoundException
+      {
+          Map<String, String> object = new HashMap<>();
+      
+          Employee e = employeeRepository.findById(id).orElse(null);
+          if(e == null)
+          {
+                throw new ResourceNotFoundException("Employee with the given ID does not exist");
+            
+          }
+          else
+          {
+            employeeRepository.deleteById(id);
+            object.put("statusCode", "200");
+            object.put("message", "Employee deleted successfully");
+          }
+          return object;
+      }
 
 
 }
