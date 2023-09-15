@@ -89,7 +89,6 @@ export default function SignUp() {
             "password": formData.password
           })
           .then((res) => {
-            console.log(res);
             if(res.data.hasOwnProperty('availStatus')) {
               if(res.data.availStatus) {
                 window.alert("User Added");
@@ -107,7 +106,7 @@ export default function SignUp() {
   return (
     <div className='card-div'>
     <Card className='signUpCard' sx={{ minWidth: 275 }}>
-      <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title="Sign Up" />
+      <CardHeader className="signin-signup-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title="Sign Up" />
       <CardContent>
         <div>
         <FormControl sx={{ m: 1, width: '25ch'}} variant="outlined">

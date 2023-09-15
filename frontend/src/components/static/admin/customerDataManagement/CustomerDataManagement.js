@@ -3,13 +3,16 @@ import TextField from '@mui/material/TextField';
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import './styles.css';
 import data from '../../../../resourcemap.config.json';
 import * as API from '../../../services/ApiRequestService';
 
 export default function CustomerData() {
-    
+    const { userID } = useParams();
+    var navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         userID: "",
         name: "",
@@ -223,6 +226,7 @@ export default function CustomerData() {
                 if(res.data.hasOwnProperty('statusCode')) {
                     if(res.data.statusCode>=200 && res.data.statusCode < 300) {
                         window.alert("Employee Added");
+                        navigate('/admin/'+userID);
                     } else window.alert("Error " + res.data.message);
                 } else {
                   window.alert("Employee addition failed" );
@@ -256,7 +260,7 @@ export default function CustomerData() {
     return (
     <div className='card-div'>
         <Card className='customerData'>
-            <CardHeader style={{fontFamily:'Montserrat', textAlign:'center'}} title="Add Customer Data" />
+            <CardHeader className="customer-form-card-header" style={{fontFamily:'Montserrat', textAlign:'center'}} title="Add Customer Data" />
             <CardContent className='card-content-container'>
                 <div className='field-outer-container'>
                     <FormControl className='field-container'>
