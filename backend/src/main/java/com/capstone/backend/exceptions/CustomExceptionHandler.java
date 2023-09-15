@@ -24,23 +24,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomExceptionHandler  {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	// protected ResponseEntity<Object> handleMethodArugmentNotValid(MethodArgumentNotValidException ex,HttpHeaders headers,HttpStatus status, WebRequest request)
-	// {
-		
-	// 	Map<String,Object> body = new HashMap<>();
-	// 	body.put("statusCode",HttpStatus.BAD_REQUEST.value());
-	// 	body.put("message","Validation Error(One or more fields are incorrect)");
-	// 	return new ResponseEntity<Object>(body,headers, HttpStatus.BAD_REQUEST);
-	// }
+	
 	public Map<String,Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex)
 	{
 		Map<String,String> errorsMap = new HashMap<>();
 		Map<String,Object> response =  new HashMap<>();
 		ex.getBindingResult().getFieldErrors().forEach(error ->{
-			errorsMap.put(error.getField(),error.getDefaultMessage());
+			errorsMap.put(error.getField(),error.getDefaultMessage().toString());
+		
 		});
+		String field = errorsMap.keySet().iterator().next();
+		String message = errorsMap.values().iterator().next();
+		String errorMessage = field + " "+ message;
 		response.put("statusCode","400");
-		response.put("message",errorsMap);
+		response.put("message",message);
 		return response ;
 	}
 	
