@@ -56,7 +56,7 @@ public class EmployeeService {
       return object;
     }
 
-    public List<Employee> getAllEmp() throws TableEmptyException
+    public Map<String,Object> getAllEmp() throws TableEmptyException
 
     {
             List<Employee> empList = employeeRepository.findAll();
@@ -66,7 +66,11 @@ public class EmployeeService {
             }
             else
             {
-                  return empList;
+                  Map<String, Object> object = new HashMap<>();
+                  object.put("statusCode", "200");
+                  object.put("message", "Employees retrieved successfully");
+                  object.put("data",empList);
+                  return object;
             }
       }
 

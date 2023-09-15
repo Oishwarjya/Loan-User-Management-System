@@ -42,7 +42,7 @@ public class CustomExceptionHandler  {
 	}
 	
 	@ExceptionHandler(value = TableEmptyException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleTableEmptyException(TableEmptyException ex) {
 		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
@@ -57,7 +57,7 @@ public class CustomExceptionHandler  {
 	}
 
 	@ExceptionHandler(value = ResourceNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
 		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());

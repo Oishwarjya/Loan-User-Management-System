@@ -46,7 +46,7 @@ public class UserService{
              return object;
              }
 
-            if(StringUtils.equals(user.getUserID(), "K123456")){
+            if(StringUtils.equalsIgnoreCase(user.getUserID(), "K123456")){
                  if(StringUtils.equals(user.getPassword(),admin.getPassword()))
                  {
                      object.put("authStatus", true);

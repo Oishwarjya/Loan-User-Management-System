@@ -39,11 +39,11 @@ public class Employee {
 
     @NotNull(message = "dob can not be null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    //@JsonFormat(pattern = "yyyy-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-DD")
     private Date dob;
 
     @NotNull(message = "doj can not be null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    //@JsonFormat(pattern = "yyyy-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-DD")
     private Date doj;
 }
