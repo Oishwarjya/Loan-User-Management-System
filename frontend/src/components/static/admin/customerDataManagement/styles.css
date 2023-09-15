@@ -24,3 +24,13 @@
 .card-content-container{
     padding: 5px;
 }
+.tCellData {
+    display: flex;
+    justify-content: space-around;
+}
+.table-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 10px;
+}
