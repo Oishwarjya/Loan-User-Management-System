@@ -7,6 +7,7 @@ import AdminDashboard from './AdminDashboard';
 import CustomerData from './customerDataManagement/CustomerDataManagement';
 import LoanCardManagement from './loanCardManagement/LoanCardManagement';
 import ItemsMasterData from './itemsMasterData/ItemsMasterData';
+import CustomerMasterData from './customerDataManagement/CustomerMasterData';
 
 export default function Admin() {
     const {userID} = useParams();
@@ -28,7 +29,7 @@ export default function Admin() {
         </AppBar>
         <Routes>
             <Route path="/" element={<AdminDashboard />} />
-            <Route path="/customer" element={<CustomerData />} />
+            <Route path="/customer" element={<CustomerMasterData />} />
             <Route path="/loancard" element={<LoanCardManagement />} />
             <Route path="/items" element={<ItemsMasterData />} />
         </Routes>

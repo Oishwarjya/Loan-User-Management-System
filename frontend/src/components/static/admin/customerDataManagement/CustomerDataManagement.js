@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
@@ -8,19 +8,21 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import './styles.css';
 import data from '../../../../resourcemap.config.json';
 import * as API from '../../../services/ApiRequestService';
+import dayjs from 'dayjs';
 
-export default function CustomerData() {
+export default function CustomerData(props) {
+    const { userId_prop, name_prop, designation_prop, department_prop, dob_prop, doj_prop, gender_prop } = props;
     const { userID } = useParams();
     var navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        userID: "",
-        name: "",
-        designation: data.employees.fields[2].Options[0],
-        department: data.employees.fields[3].Options[0],
-        dob: "",
-        doj: "",
-        gender: data.employees.fields[4].Options[0]
+        userID: (userId_prop)?userId_prop:"",
+        name: (name_prop)?name_prop:"",
+        designation: (designation_prop)?designation_prop:data.employees.fields[2].Options[0],
+        department: (department_prop)?department_prop:data.employees.fields[3].Options[0],
+        dob: (dob_prop)?dob_prop:"",
+        doj: (doj_prop)?doj_prop:"",
+        gender: (gender_prop)?gender_prop:data.employees.fields[4].Options[0]
     });
     const [errorData, setErrorData] = useState({
         userID: "",
@@ -49,6 +51,9 @@ export default function CustomerData() {
         });
     };
     const getDate = (e) => {
+        if(!e) {
+            return "";
+        }
         let yyyy = e.$y.toString();
         let mm = (e.$M+1).toString().length==1?("0"+(e.$M+1).toString()):(e.$M+1).toString();
         let dd = (e.$D).toString().length==1?("0"+(e.$D).toString()):(e.$D).toString();
@@ -257,6 +262,7 @@ export default function CustomerData() {
     //     });
     //         return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
     // };
+
     return (
     <div className='card-div'>
         <Card className='customerData'>
@@ -289,7 +295,7 @@ export default function CustomerData() {
                         <InputLabel htmlFor="designation">Designation</InputLabel>
                         <Select
                         label="Designation"
-                        defaultValue={data.employees.fields[2].Options[0]}
+                        defaultValue={formData.designation}
                         onChange={handleInputChange}
                         onError={handleError}>
                             {data.employees.fields[2].Options.map((designation, ind)=>{
@@ -301,7 +307,7 @@ export default function CustomerData() {
                         <InputLabel htmlFor="department">Department</InputLabel>
                         <Select
                         label="Department"
-                        defaultValue={data.employees.fields[3].Options[0]}
+                        defaultValue={formData.department}
                         onChange={handleInputChange}
                         onError={handleError}>
                             {data.employees.fields[3].Options.map((dept, ind)=>{
@@ -313,7 +319,7 @@ export default function CustomerData() {
                         <InputLabel htmlFor="gender">Gender</InputLabel>
                         <Select
                         label="Gender"
-                        defaultValue={data.employees.fields[4].Options[0]}
+                        defaultValue={formData.gender}
                         onChange={handleInputChange}
                         onError={handleError}>
                             {data.employees.fields[4].Options.map((gender, ind)=>{
@@ -332,6 +338,7 @@ export default function CustomerData() {
                                 onChange={handleDobChange}
                                 helperText={errorData.dob}
                                 error={errorData.dob!=''}
+                                defaultValue={dayjs(formData.dob)}
                                 />
                             </DemoContainer>
                         </LocalizationProvider>
@@ -345,6 +352,7 @@ export default function CustomerData() {
                                 onChange={handleDojChange}
                                 helperText={errorData.doj}
                                 error={errorData.doj!=''}
+                                defaultValue={dayjs(formData.doj)}
                                 />
                             </DemoContainer>
                         </LocalizationProvider>
