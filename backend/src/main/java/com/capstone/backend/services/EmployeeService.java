@@ -1,5 +1,6 @@
 package com.capstone.backend.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,38 @@ public class EmployeeService {
             object.put("message", "Employee deleted successfully");
           }
           return object;
+      }
+
+      public Map<String,Object> getOnBoardEmp() throws TableEmptyException
+
+    {
+            List<String> onBoardList = new ArrayList<String>();
+            List<User> userList =  userRepository.findAll();
+            List<Employee> empList =  employeeRepository.findAll();
+
+            if(empList.isEmpty())
+            {
+                  throw new TableEmptyException("Employee table is empty");
+            }
+            else if(userList.isEmpty())
+            {
+                  throw new TableEmptyException("User table is empty");
+            }
+            else
+            {
+                  Map<String, Object> object = new HashMap<>();
+                  for(User user : userList)
+                  {
+                        if(!employeeRepository.existsById(user.getUserID()))
+                        {
+                              onBoardList.add(user.getUserID().toString());
+                        }
+                  }
+                  object.put("statusCode", "200");
+                  object.put("message", "New Employees retrieved successfully");
+                  object.put("data",onBoardList);
+                  return object;
+            }
       }
 
 
