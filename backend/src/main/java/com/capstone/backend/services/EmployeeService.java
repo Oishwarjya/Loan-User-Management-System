@@ -114,6 +114,26 @@ public class EmployeeService {
           return object;
       }
 
+      public Map<String,Object> getEmp(String id) throws ResourceNotFoundException
+      {
+          Map<String, Object> object = new HashMap<>();
+      
+          Employee e = employeeRepository.findById(id).orElse(null);
+          if(e == null)
+          {
+                throw new ResourceNotFoundException("Employee with the given ID does not exist");
+            
+          }
+          else
+          {
+            
+            object.put("statusCode", "200");
+            object.put("data",e);
+            object.put("message", "Employee retrieved successfully");
+          }
+          return object;
+      }
+
       public Map<String,Object> getOnBoardEmp() throws TableEmptyException
 
     {
