@@ -82,5 +82,96 @@
             }
         ],
         "count": 7
+    },
+    "applyLoans": {
+        "dataURL": "/api/",
+        "fields": [
+            {
+                "Name": "userID",
+                "DisplayName": "Employee ID",
+                "Type": "text",
+                "Format": "stringEmpID",
+                "Mutable": false
+            },
+            {
+                "Name": "itemCategory",
+                "DisplayName": "Item Category",
+                "Type": "list",
+                "Format": "string",
+                "Mutable": true,
+                "Url": "api/getItemCategories",
+                "Options": []
+            },
+            {
+                "Name": "itemMake",
+                "DisplayName": "Item Make",
+                "Type": "list",
+                "Format": "string",
+                "Mutable": true,
+                "Url": "api/getItemMakes/",
+                "Options": []
+            },
+            {
+                "Name": "itemDescription",
+                "DisplayName": "Item Description",
+                "Type": "list",
+                "Format": "string",
+                "Mutable": true,
+                "Url": "api/getItemDesc/",
+                "Options": []
+            }
+        ],
+        "count": 4
+    },
+    "loans": {
+        "dataURL": "/api/",
+        "fields": [
+            {
+                "Name": "userID",
+                "DisplayName": "Employee ID",
+                "Type": "text",
+                "Format": "stringEmpID",
+                "Mutable": false
+            },
+            {
+                "Name": "loanID",
+                "DisplayName": "Loan ID",
+                "Type": "number",
+                "Format": "number",
+                "Mutable": false
+            },
+            {
+                "Name": "loanType",
+                "DisplayName": "Loan Type",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": false
+            },
+            {
+                "Name": "loanDuration",
+                "DisplayName": "Loan Duration",
+                "Type": "number",
+                "Format": "number",
+                "Mutable": true
+            },
+            {
+                "Name": "loanStatus",
+                "DisplayName": "Loan Status",
+                "Type": "staticlist",
+                "Format": "string",
+                "Mutable": true,
+                "Options": [
+                    "Pending", "Active", "Closed", "Terminated"
+                ]
+            },
+            {
+                "Name": "issueDate",
+                "DisplayName": "Issue Date",
+                "Type": "date",
+                "Format": "string",
+                "Mutable": true
+            }
+        ],
+        "count": 6
     }
 }

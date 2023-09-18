@@ -23,3 +23,11 @@ div {
   transition: 0.2s color;
   transition-timing-function: ease-in;
 }
+
+.MuiTypography-root {
+  font-family: "Montserrat" !important;
+}
+
+.tCellData {
+  font-family: "Montserrat" !important;
+}
