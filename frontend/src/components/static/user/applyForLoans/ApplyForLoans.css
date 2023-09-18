@@ -1,0 +1,24 @@
+.apply-for-loans-card-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:90%;
+}
+
+.apply-for-loans-card-header {
+    font-family: Montserrat !important;
+    font-weight: 800;
+}
+
+.apply-for-loans-button {
+    width: 30%;
+    background-image: linear-gradient(to right,black 0%,#B20600 80%);
+}
+
+.apply-for-loans-card {
+    margin: auto;
+    width: 40%;
+    height: 80%;
+    /* background-image: linear-gradient(-45deg, #434343 0%, black 100%); */
+    background-image: linear-gradient(-45deg, #FAC213 0%, white 120%);
+}
