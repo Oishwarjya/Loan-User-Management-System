@@ -38,6 +38,12 @@ public class EmployeeController {
     private EmployeeService employeeService;
     
 
+    @GetMapping("/employee/{id}")
+    public Map<String,Object> getEmp(@PathVariable String id) throws ResourceNotFoundException {
+
+        return employeeService.getEmp(id);
+    }
+
     @PostMapping("/employee")
     @ResponseBody
     public Map<String,String> addEmp(@Valid @RequestBody Employee emp) throws RecordAlreadyExistsException,ResourceNotFoundException {
