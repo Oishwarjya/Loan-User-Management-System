@@ -23,3 +23,11 @@ export function del(url, body) {
         }
     });
 }
+
+export function put(url, body) {
+    return axios.put(BASE_URL+url, body, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
