@@ -173,5 +173,46 @@
             }
         ],
         "count": 6
+    },
+    "purchaseHistory": {
+        "dataURL": "/api/",
+        "fields": [
+            {
+                "Name": "issueID",
+                "DisplayName": "Issue ID",
+                "Type": "number",
+                "Format": "number",
+                "Mutable": false
+            },
+            {
+                "Name": "itemCategory",
+                "DisplayName": "Item Category",
+                "Type": "string",
+                "Format": "string",
+                "Mutable": false
+            },
+            {
+                "Name": "itemMake",
+                "DisplayName": "Item Make",
+                "Type": "string",
+                "Format": "string",
+                "Mutable": false
+            },
+            {
+                "Name": "itemDescription",
+                "DisplayName": "Item Description",
+                "Type": "string",
+                "Format": "string",
+                "Mutable": false
+            },
+            {
+                "Name": "itemValue",
+                "DisplayName": "Item Value",
+                "Type": "number",
+                "Format": "number",
+                "Mutable": false
+            }
+        ],
+        "count": 4
     }
 }
