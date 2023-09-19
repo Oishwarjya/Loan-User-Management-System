@@ -137,15 +137,12 @@ public class EmployeeService {
       public Map<String,Object> getOnBoardEmp() throws TableEmptyException
 
     {
-            List<String> onBoardList = new ArrayList<String>();
+            // List<String> onBoardList = new ArrayList<String>();
+            List<Object> onBoardList = new ArrayList<Object>();
             List<User> userList =  userRepository.findAll();
             List<Employee> empList =  employeeRepository.findAll();
 
-            if(empList.isEmpty())
-            {
-                  throw new TableEmptyException("Employee table is empty");
-            }
-            else if(userList.isEmpty())
+            if(userList.isEmpty())
             {
                   throw new TableEmptyException("User table is empty");
             }
@@ -156,7 +153,9 @@ public class EmployeeService {
                   {
                         if(!employeeRepository.existsById(user.getUserID()))
                         {
-                              onBoardList.add(user.getUserID().toString());
+                              Map<String, Object> obj = new HashMap<>();
+                              obj.put("userID", user.getUserID().toString());
+                              onBoardList.add(obj);
                         }
                   }
                   object.put("statusCode", "200");
