@@ -11,7 +11,7 @@ import * as API from '../../../services/ApiRequestService';
 import dayjs from 'dayjs';
 
 export default function CustomerData(props) {
-    const { userID_prop, name_prop, designation_prop, department_prop, dob_prop, doj_prop, gender_prop } = props;
+    const { userID_prop, name_prop, designation_prop, department_prop, dob_prop, doj_prop, gender_prop, for_update_prop } = props;
     const { userID } = useParams();
     var navigate = useNavigate();
 
@@ -231,13 +231,33 @@ export default function CustomerData(props) {
                 if(res.data.hasOwnProperty('statusCode')) {
                     if(res.data.statusCode>=200 && res.data.statusCode < 300) {
                         window.alert("Employee Added");
-                        navigate('/admin/'+userID);
+                        // navigate('/admin/'+userID);
                     } else window.alert("Error " + res.data.message);
                 } else {
                   window.alert("Employee addition failed" );
                 }
               })
               .catch(err => { window.alert(err)});
+        }
+        else {
+            console.log(formData);
+        }
+    }
+    const handleUpdate = (e) => {
+        if(areAllFieldsValid()) {
+            API.put("/api/employees/"+userID_prop, {...formData})
+                .then((res) => {
+                    if(res.data.hasOwnProperty('statusCode')) {
+                        if(res.data.statusCode>=200 && res.data.statusCode<300) {
+                            window.alert("Employee Data Updated");
+                        } else {
+                            window.alert("Error: "+ res.data.message);
+                        }
+                    } else {
+                        window.alert("Employee addition failed");
+                    }
+                })
+                .catch(err => { window.alert(err)});
         }
         else {
             console.log(formData);
@@ -360,11 +380,18 @@ export default function CustomerData(props) {
                 </div>
             </CardContent>
             <CardActions className="submit-btn-container">
-                <Button
-                variant="contained"
-                onClick={handleSubmit}>
-                    Add Customer Data
-                </Button>
+                {(for_update_prop)?
+                    (<Button
+                    variant="contained"
+                    onClick={handleUpdate}>
+                        Update Customer Data                        
+                    </Button>):
+                    (<Button
+                        variant="contained"
+                        onClick={handleSubmit}>
+                            Add Customer Data
+                        </Button>)
+                }
             </CardActions>
         </Card>
     </div>);
