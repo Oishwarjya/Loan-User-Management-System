@@ -49,7 +49,7 @@ public class LoanService {
           return res;
     }
 
-    public Map<String, Object> addNewLoan(ApplyForLoanDTO loanApplication) throws RecordAlreadyExistsException, ResourceNotFoundException { // ADD ITEM UNAVAILABLE ERROR
+    public Map<String, Object> addNewLoan(ApplyForLoanDTO loanApplication) throws RecordAlreadyExistsException, ResourceNotFoundException { 
         Map<String, Object> res = new HashMap<>();
         List<Item> items = itemRepository.findByItemCategoryAndItemMakeAndItemDescriptionAndItemAvailability(
             loanApplication.getItemCategory(), 
@@ -57,7 +57,6 @@ public class LoanService {
             loanApplication.getItemDescription(),
             "AVAILABLE");
         if(items.size() == 0) {
-            // THROW ITEM UNAVAILABLE EXCEPTION
             throw new ResourceNotFoundException("No items available");
         } else {
             Loan l = new Loan();
@@ -70,6 +69,60 @@ public class LoanService {
             res.put("statusCode", 200);
             res.put("message", "Loan added successfully");
             res.put("itemValue", items.get(0).getItemValue());            
+        }
+        return res;
+    }
+
+    public Map<String, Object> getAllLoans() throws TableEmptyException
+    {
+        Map<String, Object> res = new HashMap<>();
+        
+        List<Loan> l = loanRepository.findAll();
+        if(l.size() == 0) {
+            throw new TableEmptyException("No loans in the system");    
+        }
+        else {
+            res.put("statusCode", 200);
+            res.put("data",l);
+            res.put("message", "Loan details retrieved successfully");
+          }
+          return res;
+    }
+
+    public Map<String, Object> updateLoan(Loan loan) throws ResourceNotFoundException
+    {
+        Map<String, Object> res = new HashMap<>();
+    
+        Loan l = loanRepository.findById(loan.getLoanID()).orElse(null);
+        if(l == null)
+        {
+              throw new ResourceNotFoundException("Loan does not exist");
+          
+        }
+        else
+        {
+          loanRepository.save(loan);
+          res.put("statusCode", "200");
+          res.put("message", "Loan details updated successfully");
+        }
+        return res;
+    }
+
+    public Map<String, Object> deleteLoan(long id) throws ResourceNotFoundException
+    {
+        Map<String, Object> res = new HashMap<>();
+    
+        Loan l = loanRepository.findById(id).orElse(null);
+        if(l == null)
+        {
+              throw new ResourceNotFoundException("Loan does not exist");
+          
+        }
+        else
+        {
+          loanRepository.deleteById(id);
+          res.put("statusCode", "200");
+          res.put("message", "Loan deleted successfully");
         }
         return res;
     }

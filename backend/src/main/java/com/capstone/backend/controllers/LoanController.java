@@ -36,13 +36,28 @@ public class LoanController {
     @Autowired
     private LoanService loanService;
 
+    @GetMapping("/loans")
+    public Map<String, Object> getAllLoans() throws TableEmptyException {
+        return loanService.getAllLoans();
+    }
+
     @GetMapping("/loans/{userID}")
     public Map<String, Object> getLoansByUserID(@PathVariable String userID) throws ResourceNotFoundException {
         return loanService.getLoansByUserID(userID);
     }
 
     @PostMapping("/loan")
-    public Map<String, Object> addNewLoan(@Valid @RequestBody ApplyForLoanDTO loan) throws ResourceNotFoundException, RecordAlreadyExistsException {
+    public Map<String, Object> addNewLoan(@RequestBody ApplyForLoanDTO loan) throws ResourceNotFoundException, RecordAlreadyExistsException {
         return loanService.addNewLoan(loan);
+    }
+
+    @PutMapping("/loan")
+    public Map<String, Object> updateLoan(@Valid @RequestBody Loan loan) throws ResourceNotFoundException {
+        return loanService.updateLoan(loan);
+    }
+
+    @DeleteMapping("/loan/{loanID}")
+    public Map<String, Object> deleteLoan(@PathVariable long loanID) throws ResourceNotFoundException {
+        return loanService.deleteLoan(loanID);
     }
 }

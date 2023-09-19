@@ -89,7 +89,7 @@ public class EmployeeService {
           {
             employeeRepository.deleteById(emp.getUserID());
             employeeRepository.save(emp);
-             object.put("statusCode", "200");
+            object.put("statusCode", "200");
             object.put("message", "Employee updated successfully");
           }
           return object;
