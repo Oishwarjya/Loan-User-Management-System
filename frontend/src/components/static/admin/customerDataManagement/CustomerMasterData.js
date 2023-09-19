@@ -2,18 +2,19 @@ import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody
 import { React, useEffect, useState } from 'react';
 import CustomerData from './CustomerDataManagement';
 import * as API from '../../../services/ApiRequestService';
+import dayjs from 'dayjs';
 
-function createData(userId, name, designation, department, gender, dob, doj) {
-    return {userId, name, designation, department, gender, dob, doj};
-}
+// function createData(userID, name, designation, department, gender, dob, doj) {
+//     return {userID, name, designation, department, gender, dob, doj};
+// }
 
-const onBoardedData = [
-    createData("k123456", "John Doe", "Manager", "Finance", "Male", "1995-08-14", "2020-01-12")
-]
+// let onBoardedData = [
+//     createData("k123457", "John Doe", "Manager", "Finance", "Male", "1995-08-14", "2020-01-12")
+// ]
 
-const newEmployeeData = [
-    createData("k123478", "", "", "", "", "", "")
-]
+// let newEmployeeData = [
+//     createData("k123459", "", "", "", "", "", "")
+// ]
 
 const headerFields = [
     "Employee Id",
@@ -25,6 +26,11 @@ const headerFields = [
     "Date of Joining",
     "Actions"
 ];
+
+const headerFieldsFoNewEmployees = [
+    "Employee Id",
+    "Actions"
+]
 
 function TableToolbar(props) {
     const { tableName } = props;
@@ -45,7 +51,19 @@ function TableCellsFromList(props) {
     let items=[];
     if(typeof list=="object") {
         for(let key in list){
-            items.push(list[key]);
+            if(list[key].indexOf('+')>-1) {
+                items.push(dayjs(list[key]).format("YYYY-MM-DD"))
+            } else {
+                items.push(list[key]);
+            }
+        }
+    } else {
+        for(let item in list) {
+            if(item.indexOf('+')>-1) {
+                items.push(dayjs(item).format("YYYY-MM-DD"))
+            } else {
+                items.push(item);
+            }
         }
     }
     return (
@@ -62,8 +80,11 @@ function TableCellsFromList(props) {
 export default function CustomerMasterData() {
     const [open, setOpen] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [onBoardedData, setOnBoardedData] = useState([]);
+    const [newEmployeeData, setNewEmployeeData] = useState([]);
+    const [focusedData, setFocusedData] = useState();
     const [props, setProps] = useState({
-        userId: "",
+        userID: "",
         name: "",
         designation: "",
         department: "",
@@ -72,12 +93,69 @@ export default function CustomerMasterData() {
         gender: ""
     });
 
-    const getOnboardedEmployees = () => {
+    const getOnboardedEmployees = async () => {
         console.log("Getting all the onboarded employees!!");
+        let endpoint_for_onboarded_employees = "/api/employees";
+        API.get(endpoint_for_onboarded_employees)
+            .then((res) => {
+                // console.log("Onboarded employees: ",res);
+                if(res.hasOwnProperty('status')) {
+                    if(res.status>=200 && res.status < 300) {
+                        console.log("Onboarded Data: ",res.data);
+                        // onBoardedData = res.data;
+                        setOnBoardedData(res.data);
+                        // console.log(onBoardedData);
+                    } else window.alert("Error " + res.data.message);
+                } else {
+                  window.alert("Unable to get the onboarded employees");
+                  console.log(res.data);
+                }
+            })
+            .catch((err) => {
+                window.alert(err);
+            });
     }
 
     const getNonOnboardedEmployees = () => {
         console.log("Getting all the non onboarded employees!!");
+        let endpoint_for_non_onboarded_employees = "/api/employees/onboard";
+        API.get(endpoint_for_non_onboarded_employees)
+            .then((res) => {
+                // console.log("Onboarded employees: ",res);
+                if(res.hasOwnProperty('status')) {
+                    if(res.status>=200 && res.status < 300) {
+                        console.log("Non onboarded Data: ",res.data);
+                        // newEmployeeData = res.data
+                        setNewEmployeeData(res.data);
+                    } else window.alert("Error " + res.data.message);
+                } else {
+                  window.alert("Unable to get the non onboarded employees");
+                }
+            })
+            .catch((err) => {
+                window.alert(err);
+            });
+    }
+
+    const deleteEmployee = async (empID) => {
+        let endpoint_for_deleting_employee = "/api/employee/"+empID;
+        API.del(endpoint_for_deleting_employee)
+            .then((res) => {
+                console.log("For deleting employees: ",res);
+                if(res.hasOwnProperty('status')) {
+                    if(res.status>=200 && res.status<300) {
+                        handleDeleteDialogClose();
+                    } 
+                    else {
+                        window.alert("Error " + res.data.message);
+                    }
+                } else {
+                    window.alert("Unable to delete the user");
+                }
+            })
+            .catch((err) => {
+                window.alert(err);
+            });
     }
 
     useEffect(() => {
@@ -87,12 +165,12 @@ export default function CustomerMasterData() {
 
     const startOnboarding = (e, row) => {
         let propObj = {
-            userId: row.userId,
+            userID: row.userID,
             name: row.name,
             designation: row.designation,
             department: row.department,
-            dob: row.dob,
-            doj: row.doj,
+            dob: (row.dob)?dayjs(row.dob).format("YYYY-MM-DD"):"",
+            doj: (row.doj)?dayjs(row.doj).format("YYYY-MM-DD"):"",
             gender: row.gender
         }
         setProps(propObj);
@@ -100,18 +178,20 @@ export default function CustomerMasterData() {
     }
     const onEdit = (e, row) => {
         let propObj = {
-            userId: row.userId,
+            userID: row.userID,
             name: row.name,
             designation: row.designation,
             department: row.department,
-            dob: row.dob,
-            doj: row.doj,
+            dob: dayjs(row.dob).format("YYYY-MM-DD"),
+            doj: dayjs(row.doj).format("YYYY-MM-DD"),
             gender: row.gender
         }
+        console.log("Props object: ",propObj);
         setProps(propObj);
         setOpen(true);
     }
-    const onDelete = () => {
+    const onDelete = (e, row) => {
+        setFocusedData(row);
         setOpenDeleteDialog(true);
     }
     const handleDialogClose = () => {
@@ -120,8 +200,9 @@ export default function CustomerMasterData() {
     const handleDeleteDialogClose = () => {
         setOpenDeleteDialog(false);
     }
-    const onDeleteConfirmation = () => {
+    const onDeleteConfirmation = async () => {
         console.log("Delete the User confirmed");
+        await deleteEmployee(focusedData.userID);
         handleDeleteDialogClose();
     }
     return (
@@ -139,8 +220,8 @@ export default function CustomerMasterData() {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                    onBoardedData.map((row) => (
-                                        <TableRow key={row.userId}>
+                                    onBoardedData.length?onBoardedData.map((row) => (
+                                        <TableRow key={row.userID}>
                                             <TableCellsFromList list={row} />
                                             <TableCell>
                                                 <div className='tCellData'>
@@ -149,11 +230,11 @@ export default function CustomerMasterData() {
                                                     onClick={(e) => {onEdit(e, row)}}>Edit</Button>
                                                     <Button 
                                                     variant="text"
-                                                    onClick={onDelete}>Delete</Button>
+                                                    onClick={(e) => {onDelete(e, row)}}>Delete</Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    ))
+                                    )):(<></>)
                                     }
                                 </TableBody>
                             </Table>
@@ -167,13 +248,13 @@ export default function CustomerMasterData() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCellsFromList list={headerFields} />
+                                        <TableCellsFromList list={headerFieldsFoNewEmployees} />
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {
-                                    newEmployeeData.map((row) => (
-                                        <TableRow key={row.userId}>
+                                    newEmployeeData.length?newEmployeeData.map((row) => (
+                                        <TableRow key={row.userID}>
                                             <TableCellsFromList list={row} />
                                             <TableCell>
                                                 <div className='tCellData'>
@@ -182,11 +263,11 @@ export default function CustomerMasterData() {
                                                     onClick={(e) => {startOnboarding(e, row)}}>Onboard</Button>
                                                     <Button 
                                                     variant="text"
-                                                    onClick={onDelete}>Delete</Button>
+                                                    onClick={(e) => {onDelete(e, row)}}>Delete</Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    ))
+                                    )):(<></>)
                                     }
                                 </TableBody>
                             </Table>
@@ -196,7 +277,7 @@ export default function CustomerMasterData() {
             </div>
             <Dialog open={open} onClose={handleDialogClose}>
                 <DialogContent>
-                    <CustomerData userId_prop={props.userId} name_prop={props.name} designation_prop={props.designation} department_prop={props.department} dob_prop={props.dob} doj_prop={props.doj} gender_prop={props.gender} />
+                    <CustomerData userID_prop={props.userID} name_prop={props.name} designation_prop={props.designation} department_prop={props.department} dob_prop={props.dob} doj_prop={props.doj} gender_prop={props.gender} />
                 </DialogContent>
             </Dialog>
             <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>

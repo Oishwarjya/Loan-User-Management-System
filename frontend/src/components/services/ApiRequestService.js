@@ -15,3 +15,11 @@ export function post(url, body) {
           "Content-Type": "application/json"
       }});
 }
+
+export function del(url, body) {
+    return axios.delete(BASE_URL+url, body, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
