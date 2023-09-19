@@ -1,0 +1,56 @@
+.card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:90%;
+
+}
+
+.card-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:90%;
+}
+
+.admin-card-header {
+    font-family: Montserrat !important;
+    font-weight: 800;
+    color: white
+}
+
+.left-card {
+    margin: auto;
+    width: 70%;
+    height: 70%;
+    background-image: linear-gradient(to right, black 0%, #7e1406 300%);
+}
+
+.middle-card {
+    margin: auto;
+    width: 70%;
+    height: 70%;
+    background-image: linear-gradient(to right, black -100%, #7e1406 200%);
+}
+
+.right-card {
+    margin: auto;
+    width: 70%;
+    height: 70%;
+    background-image: linear-gradient(to right, black -200%, #7e1406 100%);
+}
+
+.left-button {
+    width: 70%;
+    background-image: linear-gradient(to right,#B20600 0%, #FAC213 300%);
+}
+
+.middle-button {
+    width: 70%;
+    background-image: linear-gradient(to right,#B20600 -100%, #FAC213 200%);
+}
+
+.right-button {
+    width: 70%;
+    background-image: linear-gradient(to right,#B20600 -200%, #FAC213 100%);
+}

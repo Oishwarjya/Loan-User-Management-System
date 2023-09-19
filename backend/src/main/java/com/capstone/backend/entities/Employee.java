@@ -16,6 +16,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 @Entity
+@Table(name = "employee")
 public class Employee {
 
     @Id
