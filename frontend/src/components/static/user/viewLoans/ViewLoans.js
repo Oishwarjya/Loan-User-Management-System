@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from '../../../common/CommonUtils';
+import * as API from '../../../services/ApiRequestService';
 
 export default function ViewLoans() {
     const resourceName = "loans";
     const {userID} = useParams();
     const [resourceObject, setResourceObject] = useState({"resource": {}});
     const [tableData, setTableData] = useState([]);
+    const [empData, setEmpData] = useState(CommonUtils.initializeOrResetForm("employees", {"userID": userID}));
     var [headerFields, setHeaderFields] = useState([]);
     useEffect(() => {
         var tempObj= {};
@@ -21,20 +23,28 @@ export default function ViewLoans() {
             setResourceObject({"resource": {...tempObj}});
             tempArr = tempArr.filter(field => field!=="Employee ID");
             setHeaderFields([...tempArr]);
-            var data = [{
-                loanID: "1234",
-                loanType: "ABC",
-                loanDuration: "5",
-                loanStatus: "Pending",
-                issueDate: "2023-09-09"
-            }, {
-                loanID: "1234",
-                loanType: "ABC",
-                loanDuration: "5",
-                loanStatus: "Pending",
-                issueDate: "2023-09-09"
-            }];
-            setTableData([...data]);
+
+            API.get("/api/employee/"+userID).then(res => {
+                console.log(res);
+                if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                    setEmpData({...res.data.data});
+                }
+            }).catch((err) => { window.alert(err)});
+
+            API.get("/api/loans/"+userID).then((res) => {
+                if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                    var data = []
+                    data = res.data.data.map((field) => {
+                        delete field.userID;
+                        return field;
+                    });
+                    setTableData([...data]);
+                } else {
+                    window.alert("Unable to fetch loans " + res.data.message);
+                }
+            }).catch((err) => {
+                window.alert(err);
+            });
         }
     }, []);
 
@@ -42,10 +52,10 @@ export default function ViewLoans() {
         <>
                 <Box>
                     <Paper>
-                        <CommonUtils.TableToolbar tableName="ActiveLoans" other={{
-                            "Employee ID": userID.toString(),
-                            "Designation": "Manager",
-                            "Department": "Technology"
+                        <CommonUtils.TableToolbar tableName="Active Loans" other={{
+                            "Employee ID": empData.userID,
+                            "Designation": empData.designation,
+                            "Department": empData.department
                         }}/>
                         <TableContainer component={Paper}>
                             <Table>

@@ -2,6 +2,7 @@ import {useEffect, useState, React, useReducer} from "react";
 import { useParams } from "react-router-dom";
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from "../../../common/CommonUtils";
+import * as API from '../../../services/ApiRequestService';
 import './ApplyForLoans.css';
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputLabel, TextField, MenuItem, Select } from '@mui/material';
 
@@ -60,6 +61,14 @@ export default function ApplyForLoans() {
 
     const handleSubmit = () => {
         console.log(formData);
+        API.post("/api/loan", formData).then((res) => {
+            console.log(res);
+            if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                window.alert("Loan worth "+res.data.itemValue + " has been applied for");
+            } else {
+                window.alert("Unable to process application " + res.data.message);
+            }
+        }).catch(err => window.alert(err));
     }
 
     return (
@@ -116,7 +125,7 @@ export default function ApplyForLoans() {
             justifyContent: 'center',
             alignItems: 'center'
             }}>
-          <Button onClick={() => { handleSubmit() }} variant="contained" className="apply-for-loans-button">Apply</Button>
+          <Button onClick={(e) => { e.preventDefault(); handleSubmit() }} variant="contained" className="apply-for-loans-button">Apply</Button>
           </CardActions>
         </Card>
         </div>        
