@@ -11,12 +11,12 @@ import * as API from '../../../services/ApiRequestService';
 import dayjs from 'dayjs';
 
 export default function CustomerData(props) {
-    const { userId_prop, name_prop, designation_prop, department_prop, dob_prop, doj_prop, gender_prop } = props;
+    const { userID_prop, name_prop, designation_prop, department_prop, dob_prop, doj_prop, gender_prop } = props;
     const { userID } = useParams();
     var navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        userID: (userId_prop)?userId_prop:"",
+        userID: (userID_prop)?userID_prop:"",
         name: (name_prop)?name_prop:"",
         designation: (designation_prop)?designation_prop:data.employees.fields[2].Options[0],
         department: (department_prop)?department_prop:data.employees.fields[3].Options[0],
