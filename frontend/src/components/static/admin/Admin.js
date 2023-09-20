@@ -5,9 +5,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home'
 import AdminDashboard from './AdminDashboard';
 import CustomerData from './customerDataManagement/CustomerDataManagement';
-import LoanCardManagement from './loanCardManagement/LoanCardManagement';
+import LoanData from './loanCardManagement/LoanMasterData';
 import ItemsMasterData from './itemsMasterData/ItemsMasterData';
 import CustomerMasterData from './customerDataManagement/CustomerMasterData';
+ 
 
 export default function Admin() {
     const {userID} = useParams();
@@ -30,7 +31,7 @@ export default function Admin() {
         <Routes>
             <Route path="/" element={<AdminDashboard />} />
             <Route path="/customer" element={<CustomerMasterData />} />
-            <Route path="/loancard" element={<LoanCardManagement />} />
+            <Route path="/loan" element={< LoanData/>} />
             <Route path="/items" element={<ItemsMasterData />} />
         </Routes>
         </>
