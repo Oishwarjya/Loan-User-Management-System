@@ -11,4 +11,5 @@ import java.util.List;
 public interface IssueRepository extends JpaRepository<Issue, Long>{
     List<Issue> findByUserID(String userID);
 
+    List<Issue> findByLoanID(long loanID);
 }

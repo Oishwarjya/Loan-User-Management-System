@@ -33,7 +33,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         margin:'auto'
                     }}>
-                        <Button variant="contained" className="left-button" onClick={() => handleSubmit('/customer')}>Customer Data Management</Button>
+                        <Button variant="contained" className="left-button" onClick={() => handleSubmit('/customers')}>Customer Data Management</Button>
                     </CardActions>
                 </Card>
             </div>
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
                         alignItems: 'center',
                         margin:'auto'
                     }}>
-                        <Button variant="contained" className="middle-button" onClick={() => handleSubmit('/loancard')}>Loan Card Management</Button>
+                        <Button variant="contained" className="middle-button" onClick={() => handleSubmit('/loancards')}>Loan Card Management</Button>
                     </CardActions>
                 </Card>
             </div>

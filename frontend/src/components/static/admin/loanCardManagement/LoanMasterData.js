@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from '../../../common/CommonUtils';
+import * as API from '../../../services/ApiRequestService';
 import dayjs from 'dayjs';
 
 export default function LoanData() {
@@ -12,6 +13,19 @@ export default function LoanData() {
     const [tableData, setTableData] = useState([]);
     var [headerFields, setHeaderFields] = useState([]);
     const [open, setOpen] = useState(false);
+
+    const getAllLoans = () => {
+        API.get("/api/loans").then((res) => {
+            if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                setTableData([...res.data.data]);
+            } else {
+                window.alert("Unable to fetch loans " + res.data.message);
+            }
+        }).catch((err) => {
+            window.alert(err);
+        });
+    };
+
     useEffect(() => {
         var tempObj= {};
         var tempArr= [];
@@ -22,22 +36,7 @@ export default function LoanData() {
             });
             setResourceObject({"resource": {...tempObj}});
             setHeaderFields([...tempArr]);
-            var data = [{
-                userID:"K345678",
-                loanID: "1234",
-                loanType: "ABC",
-                loanDuration: "5",
-                loanStatus: "Pending",
-                issueDate: "2023-09-09"
-            }, {
-                userID:"K567890",
-                loanID: "1234",
-                loanType: "ABC",
-                loanDuration: "5",
-                loanStatus: "Pending",
-                issueDate: "2023-09-09"
-            }];
-            setTableData([...data]);
+            getAllLoans();
         }
     }, []);
 
@@ -57,7 +56,16 @@ export default function LoanData() {
         setOpen(true);
     }
     const onDelete = (e, row) => {
-        
+        API.del("/api/loan/"+row.loanID).then((res) => {
+            if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                window.alert("Deleted loan successfully");
+                getAllLoans();
+            } else {
+                window.alert("Unable to delete loan " + res.data.message);
+            }
+        }).catch((err) => {
+            window.alert(err);
+        });
     }
     return (
         <>

@@ -30,8 +30,8 @@ export default function Admin() {
         </AppBar>
         <Routes>
             <Route path="/" element={<AdminDashboard />} />
-            <Route path="/customer" element={<CustomerMasterData />} />
-            <Route path="/loan" element={< LoanData/>} />
+            <Route path="/customers" element={<CustomerMasterData />} />
+            <Route path="/loancards" element={< LoanData/>} />
             <Route path="/items" element={<ItemsMasterData />} />
         </Routes>
         </>

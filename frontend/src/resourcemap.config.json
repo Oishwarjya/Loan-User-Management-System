@@ -127,17 +127,17 @@
         "dataURL": "/api/",
         "fields": [
             {
-                "Name": "userID",
-                "DisplayName": "Employee ID",
-                "Type": "text",
-                "Format": "stringEmpID",
-                "Mutable": false
-            },
-            {
                 "Name": "loanID",
                 "DisplayName": "Loan ID",
                 "Type": "number",
                 "Format": "number",
+                "Mutable": false
+            },
+            {
+                "Name": "userID",
+                "DisplayName": "Employee ID",
+                "Type": "text",
+                "Format": "stringEmpID",
                 "Mutable": false
             },
             {

@@ -245,7 +245,7 @@ export default function CustomerData(props) {
     }
     const handleUpdate = (e) => {
         if(areAllFieldsValid()) {
-            API.put("/api/employees/"+userID_prop, {...formData})
+            API.put("/api/employee/"+userID_prop, {...formData})
                 .then((res) => {
                     if(res.data.hasOwnProperty('statusCode')) {
                         if(res.data.statusCode>=200 && res.data.statusCode<300) {

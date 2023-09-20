@@ -40,7 +40,7 @@ public class Item {
     @NotBlank(message = "Item Category is mandatory")
     private String itemCategory;
 
-    @Column(name="itemAvailability", columnDefinition = "varchar(15) default 'AVAILABLE'")
+    @Column(name="itemAvailability", columnDefinition = "varchar(30) default 'AVAILABLE'")
     private String itemAvailability;
 
     @NotNull

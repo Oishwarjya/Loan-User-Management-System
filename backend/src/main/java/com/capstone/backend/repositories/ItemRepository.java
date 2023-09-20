@@ -12,4 +12,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findByItemCategoryAndItemMakeAndItemDescriptionAndItemAvailability(String itemCategory, String itemMake, String itemDescription, String itemAvailability);
 
+    List<Item> findByItemAvailability(String itemAvailability);
+
 }
