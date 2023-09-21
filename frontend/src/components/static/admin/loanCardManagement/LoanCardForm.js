@@ -21,6 +21,7 @@ export default function LoanCardForm(props) {
         if(Object.keys(resourceObject.resource).length == 0 ) {
             resources[resourceName].fields.forEach(field => temp[field.Name] = {...field});
             setResourceObject({"resource": {...temp}});
+            console.log(defaultFormData);
         }
     }, []);
 
@@ -42,17 +43,31 @@ export default function LoanCardForm(props) {
         let dd = (e.$D).toString().length==1?("0"+(e.$D).toString()):(e.$D).toString();
         return yyyy+"-"+mm+"-"+dd;
     }
-    const handleDateChange = (e) => {
+
+    const handleDateChange = (e, name) => {
         console.log(e);
-        const {name, value} = e.target;
+        console.log(name);
         setFormData({
             ...formData,
-            [name]: getDate(value)
+            [name]: getDate(e)
         });
     }
+
+    const handleSubmit = () => {
+        if(formData.loanStatus === "ACTIVE") {
+            
+        }
+        console.log(formData);
+    };
+
     return(
         <>
-            <div>
+            <div style={{   
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+        }}>
             {
                 Object.values(resourceObject.resource).map((field, index) => {
                     if(field.Type=="text") {
@@ -96,7 +111,7 @@ export default function LoanCardForm(props) {
                                 <DemoContainer components={['DateField']}>
                                     <DateField
                                     label={field.DisplayName}
-                                    onChange={(e) => {handleDateChange(e)}}
+                                    onChange={(e) => {handleDateChange(e, field.Name)}}
                                     // helperText={errorData.dob}
                                     // error={errorData.dob!=''}
                                     name={field.Name}
@@ -108,11 +123,34 @@ export default function LoanCardForm(props) {
                         </FormControl>
     
                         );
+                    } else if(field.Type == "number") {
+                        return (
+                            <FormControl key={index} sx={{ m: 1, width: '25ch'}} variant="outlined">
+                            <TextField 
+                                variant="outlined"
+                                label={field.DisplayName}
+                                name={field.Name}
+                                type="number"
+                                value={formData[field.Name]}
+                                onChange={handleInputChange}
+                                disabled={!field.Mutable}
+                                // error={errors.userID!=""} 
+                                // helperText={errors.userID}
+                                />
+                            </FormControl>
+
+                        );
                     }
                 })
             }
           </div>
-
+          <div style={{   
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+        }}>
+          <Button onClick={handleSubmit} variant="contained" className="signUpButton">Update Loan</Button>
+          </div>
         </>
     );
 }

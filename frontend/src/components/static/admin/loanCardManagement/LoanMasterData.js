@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 export default function LoanData() {
     const resourceName = "loans";
     const {userID} = useParams();
-    var formData = {};
+    const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName));
     const [resourceObject, setResourceObject] = useState({"resource": {}});
     const [tableData, setTableData] = useState([]);
     var [headerFields, setHeaderFields] = useState([]);
@@ -45,7 +45,7 @@ export default function LoanData() {
     const onEdit = (e, row) => {
         e.preventDefault();
         console.log(row);
-        formData = {...row};
+        setFormData({...row});
         setOpen(true);
     }
 
@@ -108,6 +108,9 @@ export default function LoanData() {
                         </TableContainer>
                     </Paper>
                     <Dialog open={open} onClose={handleDialogClose}>
+                        <DialogTitle>
+                            Edit Loan
+                        </DialogTitle> 
                         <DialogContent>
                             <LoanCardForm resourceName={resourceName} defaultFormData={formData}/>
                         </DialogContent>
