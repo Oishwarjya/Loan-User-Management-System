@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from '../../../common/CommonUtils';
+import LoanCardForm from './LoanCardForm';
 import * as API from '../../../services/ApiRequestService';
 import dayjs from 'dayjs';
 
 export default function LoanData() {
     const resourceName = "loans";
     const {userID} = useParams();
+    var formData = {};
     const [resourceObject, setResourceObject] = useState({"resource": {}});
     const [tableData, setTableData] = useState([]);
     var [headerFields, setHeaderFields] = useState([]);
@@ -42,19 +44,13 @@ export default function LoanData() {
 
     const onEdit = (e, row) => {
         e.preventDefault();
-        let propObj = {
-            userID: row.userID,
-            loanID: row.loanID,
-            loanDuration: row.loanDuration,
-            loanType: row.loanType,
-            issueDate: dayjs(row.issueDate).format("YYYY-MM-DD"),
-            loanStatus : row.loanStatus
-           
-        }
-        console.log("Props object: ",propObj);
-        setResourceObject(propObj);
+        console.log(row);
+        formData = {...row};
         setOpen(true);
     }
+
+    const handleDialogClose = () => { setOpen(false); };
+
     const onDelete = (e, row) => {
         API.del("/api/loan/"+row.loanID).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
@@ -82,9 +78,6 @@ export default function LoanData() {
                                             </TableCell>
                                             
                                             ))
-                                            
-                                            
-                                            
                                     }
                                     <TableCell align="right"><span className='tCellData'>Actions</span>
                                         </TableCell>
@@ -114,6 +107,11 @@ export default function LoanData() {
                             </Table>
                         </TableContainer>
                     </Paper>
+                    <Dialog open={open} onClose={handleDialogClose}>
+                        <DialogContent>
+                            <LoanCardForm resourceName={resourceName} defaultFormData={formData}/>
+                        </DialogContent>
+                    </Dialog>
                 </Box>
 
         </>
