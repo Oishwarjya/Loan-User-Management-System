@@ -315,6 +315,7 @@ export default function CustomerData(props) {
                         <InputLabel htmlFor="designation">Designation</InputLabel>
                         <Select
                         label="Designation"
+                        name="designation"
                         defaultValue={formData.designation}
                         onChange={handleInputChange}
                         onError={handleError}>
@@ -327,6 +328,7 @@ export default function CustomerData(props) {
                         <InputLabel htmlFor="department">Department</InputLabel>
                         <Select
                         label="Department"
+                        name="department"
                         defaultValue={formData.department}
                         onChange={handleInputChange}
                         onError={handleError}>
@@ -339,6 +341,7 @@ export default function CustomerData(props) {
                         <InputLabel htmlFor="gender">Gender</InputLabel>
                         <Select
                         label="Gender"
+                        name="gender"
                         defaultValue={formData.gender}
                         onChange={handleInputChange}
                         onError={handleError}>
