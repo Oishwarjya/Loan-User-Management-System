@@ -53,7 +53,7 @@ public class EmployeeController {
 
     @GetMapping("/employees")
     @ResponseBody
-    public Map<String,Object> getAllEmp() throws TableEmptyException
+    public Map<String,Object> getAllEmp() 
     {
         return employeeService.getAllEmp();
     }

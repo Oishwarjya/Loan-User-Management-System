@@ -21,7 +21,7 @@ import com.capstone.backend.dtos.ApplyForLoanDTO;
 import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.Loan;
 import com.capstone.backend.entities.User;
-import com.capstone.backend.exceptions.CannotDeleteUnterminatedLoanException;
+import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.exceptions.TableEmptyException;
@@ -58,7 +58,7 @@ public class LoanController {
     }
 
     @DeleteMapping("/loan/{loanID}")
-    public Map<String, Object> deleteLoan(@PathVariable long loanID) throws ResourceNotFoundException, CannotDeleteUnterminatedLoanException {
+    public Map<String, Object> deleteLoan(@PathVariable long loanID) throws ResourceNotFoundException, CannotDeleteRecordException {
         return loanService.deleteLoan(loanID);
     }
 }
