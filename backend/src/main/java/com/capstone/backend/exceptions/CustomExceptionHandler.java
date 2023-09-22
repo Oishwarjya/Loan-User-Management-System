@@ -63,9 +63,9 @@ public class CustomExceptionHandler  {
 		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
 	}
 
-	@ExceptionHandler(value = CannotDeleteUnterminatedLoanException.class)
+	@ExceptionHandler(value = CannotDeleteRecordException.class)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody ErrorResponse handleCannotDeleteUnterminatedLoanException(CannotDeleteUnterminatedLoanException ex) {
+	public @ResponseBody ErrorResponse handleCannotDeleteRecordException(CannotDeleteRecordException ex) {
 		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}

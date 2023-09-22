@@ -1,10 +1,10 @@
 package com.capstone.backend.exceptions;
 
-public class CannotDeleteUnterminatedLoanException extends Exception {
+public class CannotDeleteRecordException extends Exception {
     private static final long serialVersionUID = 1L;
 	private String message;
 
-	public CannotDeleteUnterminatedLoanException(String message) {
+	public CannotDeleteRecordException(String message) {
 		super();
 		this.message = message;
 	}

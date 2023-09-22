@@ -57,17 +57,20 @@ public class EmployeeService {
       return object;
     }
 
-    public Map<String,Object> getAllEmp() throws TableEmptyException
+    public Map<String,Object> getAllEmp() 
 
     {
             List<Employee> empList = employeeRepository.findAll();
+            Map<String, Object> object = new HashMap<>();
             if(empList.isEmpty())
             {
-                  throw new TableEmptyException("Employee table is empty");
+                  object.put("statusCode", "200");
+                  object.put("message", "No Employees onboarded yet");
+                  object.put("data",empList);
+                  return object;
             }
             else
             {
-                  Map<String, Object> object = new HashMap<>();
                   object.put("statusCode", "200");
                   object.put("message", "Employees retrieved successfully");
                   object.put("data",empList);

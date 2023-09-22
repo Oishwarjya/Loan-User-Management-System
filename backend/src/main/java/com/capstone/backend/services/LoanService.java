@@ -14,7 +14,7 @@ import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.Loan;
 import com.capstone.backend.entities.User;
 import com.capstone.backend.dtos.ApplyForLoanDTO;
-import com.capstone.backend.exceptions.CannotDeleteUnterminatedLoanException;
+import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.exceptions.TableEmptyException;
@@ -148,7 +148,7 @@ public class LoanService {
         return res;
     }
 
-    public Map<String, Object> deleteLoan(long id) throws ResourceNotFoundException, CannotDeleteUnterminatedLoanException
+    public Map<String, Object> deleteLoan(long id) throws ResourceNotFoundException, CannotDeleteRecordException
     {
         Map<String, Object> res = new HashMap<>();
     
@@ -157,7 +157,7 @@ public class LoanService {
         {
             throw new ResourceNotFoundException("Loan does not exist");
         } else if(!l.getLoanStatus().equalsIgnoreCase("TERMINATED")) {
-            throw new CannotDeleteUnterminatedLoanException("Cannot delete a loan that is not terminated first");
+            throw new CannotDeleteRecordException("Cannot delete a loan that is not terminated first");
         } else {
           loanRepository.deleteById(id);
           res.put("statusCode", "200");
