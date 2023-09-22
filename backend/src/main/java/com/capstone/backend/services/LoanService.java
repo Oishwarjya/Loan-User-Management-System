@@ -44,8 +44,10 @@ public class LoanService {
         
         List<Loan> l = loanRepository.findAllByUserID(id);
         if(l.size() == 0) {
-            throw new ResourceNotFoundException("No loans for this user");    
-        }
+          res.put("statusCode", 200);
+          res.put("data",l);
+          res.put("message", "No loans in the system for the user");
+      }
         else {
             res.put("statusCode", 200);
             res.put("data",l);
@@ -84,8 +86,10 @@ public class LoanService {
         
         List<Loan> l = loanRepository.findAll();
         if(l.size() == 0) {
-            throw new TableEmptyException("No loans in the system");    
-        }
+          res.put("statusCode", 200);
+          res.put("data",l);
+          res.put("message", "No loans in the system");
+      }
         else {
             res.put("statusCode", 200);
             res.put("data",l);

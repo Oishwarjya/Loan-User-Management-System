@@ -7,13 +7,21 @@ import { TableCell, Toolbar, Typography } from '@mui/material';
  * @param {Object} init Takes the initial configs as parameter 
  * @returns The initialized formData object that you can put as a parameter in the setFormData method
  */
-export const initializeOrResetForm = (resourceName, init) => {
+export const initializeOrResetForm = (resourceName, init, options = null) => {
     let temp = {};
-    resources[resourceName].fields.forEach(field=>{
+    if(options != null && options.hasOwnProperty('onlyString') && options.onlyString) {
+        resources[resourceName].fields.forEach(field=>{
+            temp = { ...temp, 
+                    [field.Name]: ""
+                };
+        });    
+    } else { 
+        resources[resourceName].fields.forEach(field=>{
         temp = { ...temp, 
-                [field.Name]: field.Format.includes("string")?"":[]
+                [field.Name]: field.Format.includes("string")?"": field.Format == "number"? 0 :[]
             };
-    });
+        });
+    }
     temp = {...temp, ...init};
     return { ...temp};
 };

@@ -187,21 +187,21 @@
             {
                 "Name": "itemCategory",
                 "DisplayName": "Item Category",
-                "Type": "string",
+                "Type": "text",
                 "Format": "string",
                 "Mutable": false
             },
             {
                 "Name": "itemMake",
                 "DisplayName": "Item Make",
-                "Type": "string",
+                "Type": "text",
                 "Format": "string",
                 "Mutable": false
             },
             {
                 "Name": "itemDescription",
                 "DisplayName": "Item Description",
-                "Type": "string",
+                "Type": "text",
                 "Format": "string",
                 "Mutable": false
             },
@@ -214,5 +214,53 @@
             }
         ],
         "count": 4
+    },
+    "items": {
+        "dataURL": "/api/",
+        "fields": [
+            {
+                "Name": "itemID",
+                "DisplayName": "Item ID",
+                "Type": "number",
+                "Format": "number",
+                "Mutable": false
+            },
+            {
+                "Name": "itemCategory",
+                "DisplayName": "Item Category",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": true
+            },
+            {
+                "Name": "itemMake",
+                "DisplayName": "Item Make",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": true
+            },
+            {
+                "Name": "itemDescription",
+                "DisplayName": "Item Description",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": true
+            },
+            {
+                "Name": "itemValue",
+                "DisplayName": "Item Value",
+                "Type": "number",
+                "Format": "number",
+                "Mutable": true
+            },
+            {
+                "Name": "itemAvailability",
+                "DisplayName": "Item Availability",
+                "Type": "text",
+                "Format": "string",
+                "Mutable": true
+            }
+        ],
+        "count": 6
     }
 }

@@ -8,23 +8,17 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
-export default function LoanCardForm(props) {
+export default function ItemsForm(props) {
     const { defaultFormData, resourceName } = props;
     const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {...defaultFormData}));
     const [errors, setErrors] = useState(CommonUtils.initializeOrResetForm(resourceName, {}, {'onlyString': true}));
     const [resourceObject, setResourceObject] = useState({"resource": {}});
-    const [options, setOptions] = useState({
-        "loanStatus": defaultFormData.loanStatus==="PENDING"?["PENDING","ACTIVE","TERMINATED"]: defaultFormData.loanStatus==="ACTIVE"?["ACTIVE", "CLOSED", "TERMINATED"]: [defaultFormData.loanStatus]
-    });
 
     useEffect(() => {
         var temp= {}
         if(Object.keys(resourceObject.resource).length == 0 ) {
             resources[resourceName].fields.forEach(field => temp[field.Name] = {...field});
-            if(defaultFormData.loanStatus != "PENDING") {
-                temp.issueDate.Mutable = false;
-            }
-            if(defaultFormData.loanStatus === "TERMINATED") {
+            if(defaultFormData.itemAvailability === "UNAVAILABLE") {
                 Object.keys(temp).forEach((key) => {
                     temp[key].Mutable = false;
                 });
@@ -89,12 +83,13 @@ export default function LoanCardForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(isFormDataValid(formData.loanStatus)) {
+        console.log(formData);
+  //      if(isFormDataValid(formData.loanStatus)) {
             setErrors(CommonUtils.initializeOrResetForm(resourceName, {}, { 'onlyString': true}));
-            props.updateData(formData);
-        } else {
+            props.onSubmit(formData);
+     //   } else {
             
-        }
+    //    }
     };
 
     return(
@@ -122,47 +117,6 @@ export default function LoanCardForm(props) {
                                 />
                             </FormControl>
                         );
-                    } else if(field.Type=="list" || field.Type=="staticlist") {
-                        return (
-                            <FormControl key={index} sx={{ m: 1, width: '25ch'}} variant="outlined">
-                            <InputLabel htmlFor={field.Name}>{field.DisplayName}</InputLabel>
-                            <Select
-                            label={field.DisplayName}
-                            value={formData[field.Name]}
-                            name={field.Name}
-                            disabled={!field.Mutable}
-                            onChange={handleInputChange}
-                            error={errors[field.Name]!=""} 
-                        >
-                                {options[field.Name].map((option, index) => {
-                                    return (<MenuItem value={option} key={index}>{option}</MenuItem>);
-
-                                })}
-                            </Select>
-                            <FormHelperText>
-                                {errors[field.Name]}
-                            </FormHelperText>
-                        </FormControl>
-                        );
-                    } else if(field.Type == "date") {
-                        return (
-                            <FormControl key={index} sx={{ m: 1, width: '25ch'}} variant="outlined">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DateField']}>
-                                    <DateField
-                                    label={field.DisplayName}
-                                    onChange={(e) => {handleDateChange(e, field.Name)}}
-                                    error={errors[field.Name]!=""} 
-                                    helperText={errors[field.Name]}
-                                    name={field.Name}
-                                    disabled={!field.Mutable}        
-                                    value={dayjs(formData[field.Name])}
-                                    />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                        </FormControl>
-    
-                        );
                     } else if(field.Type == "number") {
                         return (
                             <FormControl key={index} sx={{ m: 1, width: '25ch'}} variant="outlined">
@@ -189,7 +143,7 @@ export default function LoanCardForm(props) {
         justifyContent: 'center',
         alignItems: 'center'
         }}>
-          <Button onClick={handleSubmit} variant="contained" className="signUpButton">Update Loan</Button>
+          <Button onClick={handleSubmit} variant="contained" className="signUpButton">{props.btnLabel}</Button>
           </div>
         </>
     );

@@ -44,7 +44,6 @@ export default function LoanData() {
 
     const onEdit = (e, row) => {
         e.preventDefault();
-        console.log(row);
         setFormData({...row});
         setOpen(true);
     }
@@ -62,6 +61,20 @@ export default function LoanData() {
         }).catch((err) => {
             window.alert(err);
         });
+    }
+
+    const onUpdate = (data) => {
+        API.put("/api/loan", {...data}).then((res) => {
+            if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                window.alert("Updated loan successfully");
+                getAllLoans();
+            } else {
+                window.alert("Unable to update loan " + res.data.message);
+            }
+       }).catch((err) => {
+            window.alert(err);
+        });
+        handleDialogClose();
     }
     return (
         <>
@@ -112,7 +125,7 @@ export default function LoanData() {
                             Edit Loan
                         </DialogTitle> 
                         <DialogContent>
-                            <LoanCardForm resourceName={resourceName} defaultFormData={formData}/>
+                            <LoanCardForm resourceName={resourceName} defaultFormData={formData} updateData={onUpdate}/>
                         </DialogContent>
                     </Dialog>
                 </Box>

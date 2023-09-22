@@ -1,5 +1,5 @@
 import {useEffect, useState, React, useReducer} from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from "../../../common/CommonUtils";
 import * as API from '../../../services/ApiRequestService';
@@ -8,6 +8,7 @@ import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputL
 
 
 export default function ApplyForLoans() {
+    let navigate = useNavigate();
     const resourceName = "applyLoans";
     const {userID} = useParams();
     const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {"userID": userID, "itemCategory": "Furniture", "itemMake": "Wooden", "itemDescription": "Chair"}));
@@ -65,6 +66,7 @@ export default function ApplyForLoans() {
             console.log(res);
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 window.alert("Loan worth "+res.data.itemValue + " has been applied for");
+                navigate('/user/'+userID);
             } else {
                 window.alert("Unable to process application " + res.data.message);
             }
