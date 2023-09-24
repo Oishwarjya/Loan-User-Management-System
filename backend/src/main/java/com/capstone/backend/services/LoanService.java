@@ -146,7 +146,7 @@ public class LoanService {
             issueRepository.save(issue);
           }
           loanRepository.save(loan);
-          res.put("statusCode", "200");
+          res.put("statusCode", 200);
           res.put("message", "Loan details updated successfully");
         }
         return res;
@@ -164,7 +164,7 @@ public class LoanService {
             throw new CannotDeleteRecordException("Cannot delete a loan that is not terminated first");
         } else {
           loanRepository.deleteById(id);
-          res.put("statusCode", "200");
+          res.put("statusCode", 200);
           res.put("message", "Loan deleted successfully");
         }
         return res;

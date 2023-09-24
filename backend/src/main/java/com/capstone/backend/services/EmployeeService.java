@@ -33,9 +33,9 @@ public class EmployeeService {
 
     }
 
-    public Map<String,String> addEmp(Employee emp) throws RecordAlreadyExistsException,ResourceNotFoundException
+    public Map<String,Object> addEmp(Employee emp) throws RecordAlreadyExistsException,ResourceNotFoundException
     {
-          Map<String, String> object = new HashMap<>();
+          Map<String, Object> object = new HashMap<>();
           User user = userRepository.findById(emp.getUserID()).orElse(null);
           Employee e = employeeRepository.findById(emp.getUserID()).orElse(null);
           if(user == null)
@@ -45,7 +45,7 @@ public class EmployeeService {
           else if(e == null)
           {
                 employeeRepository.save(emp);
-                object.put("statusCode", "200");
+                object.put("statusCode", 200);
                 object.put("message", "Employee added successfully");
             
           }
@@ -64,23 +64,23 @@ public class EmployeeService {
             Map<String, Object> object = new HashMap<>();
             if(empList.isEmpty())
             {
-                  object.put("statusCode", "200");
+                  object.put("statusCode", 200);
                   object.put("message", "No Employees onboarded yet");
                   object.put("data",empList);
                   return object;
             }
             else
             {
-                  object.put("statusCode", "200");
+                  object.put("statusCode", 200);
                   object.put("message", "Employees retrieved successfully");
                   object.put("data",empList);
                   return object;
             }
       }
 
-      public Map<String,String> updateEmp(Employee emp) throws ResourceNotFoundException
+      public Map<String,Object> updateEmp(Employee emp) throws ResourceNotFoundException
       {
-          Map<String, String> object = new HashMap<>();
+          Map<String, Object> object = new HashMap<>();
       
           Employee e = employeeRepository.findById(emp.getUserID()).orElse(null);
           if(e == null)
@@ -92,15 +92,15 @@ public class EmployeeService {
           {
             employeeRepository.deleteById(emp.getUserID());
             employeeRepository.save(emp);
-            object.put("statusCode", "200");
+            object.put("statusCode", 200);
             object.put("message", "Employee updated successfully");
           }
           return object;
       }
 
-      public Map<String,String> deleteEmp(String id) throws ResourceNotFoundException
+      public Map<String,Object> deleteEmp(String id) throws ResourceNotFoundException
       {
-          Map<String, String> object = new HashMap<>();
+          Map<String, Object> object = new HashMap<>();
       
           Employee e = employeeRepository.findById(id).orElse(null);
           if(e == null)
@@ -111,7 +111,7 @@ public class EmployeeService {
           else
           {
             employeeRepository.deleteById(id);
-            object.put("statusCode", "200");
+            object.put("statusCode", 200);
             object.put("message", "Employee deleted successfully");
           }
           return object;

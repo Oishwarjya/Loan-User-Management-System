@@ -32,12 +32,15 @@ export const initializeOrResetForm = (resourceName, init, options = null) => {
  * @returns HTML TableCell
  */
 export function TableCellsFromList(props) {
-    const { list } = props;
+    const { row, tableHeader } = props;
     let items=[];
-    if(typeof list=="object") {
-        for(let key in list){
-            items.push(list[key]);
-        }
+    if(typeof row=="object") {
+        // for(let key in list){
+        //     items.push(list[key]);
+        // }
+        tableHeader.forEach((column) => {
+            items.push(row[column.Name]);
+        })
     }
     return (
         <>

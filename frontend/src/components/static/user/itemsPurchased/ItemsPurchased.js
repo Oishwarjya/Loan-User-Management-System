@@ -18,7 +18,11 @@ export default function ItemsPurchased() {
         if(Object.keys(resourceObject.resource).length == 0 ) {
             resources[resourceName].fields.forEach(field => {
                 tempObj[field.Name] = {...field};
-                tempArr.push(field.DisplayName);
+                tempArr.push(
+                    {
+                        DisplayName: field.DisplayName,
+                        Name: field.Name
+                    });
             });
             setResourceObject({"resource": {...tempObj}});
             setHeaderFields([...tempArr]);
@@ -57,7 +61,7 @@ export default function ItemsPurchased() {
                                     <TableRow>
                                     {
                                         headerFields.map((field, ind) => (
-                                            <TableCell align="right" key={ind}><span className='tCellData'>{field}</span></TableCell>
+                                            <TableCell align="right" key={ind}><span className='tCellData'>{field.DisplayName}</span></TableCell>
                                             ))
                                     }
                                     </TableRow>
@@ -66,7 +70,7 @@ export default function ItemsPurchased() {
                                     {
                                     tableData.map((row, index) => (
                                         <TableRow key={index}>
-                                            <CommonUtils.TableCellsFromList list={row} />
+                                            <CommonUtils.TableCellsFromList row={row} tableHeader={headerFields}  />
                                         </TableRow>
                                     ))
                                     }

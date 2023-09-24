@@ -52,7 +52,11 @@ export default function ItemsMasterData() {
         if(Object.keys(resourceObject.resource).length == 0 ) {
             resources[resourceName].fields.forEach(field => {
                 tempObj[field.Name] = {...field};
-                tempArr.push(field.DisplayName);
+                tempArr.push(
+                    {
+                        DisplayName: field.DisplayName,
+                        Name: field.Name
+                    });
             });
             setResourceObject({"resource": {...tempObj}});
             setHeaderFields([...tempArr]);
@@ -97,6 +101,10 @@ export default function ItemsMasterData() {
     }
 
     const onAdd = (data) => {
+        data = {
+            ...data,
+            itemID: null
+        }
         API.post("/api/item", {...data}).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 window.alert("Added item successfully");
@@ -112,23 +120,31 @@ export default function ItemsMasterData() {
 
     const onNew = (e) => {
             e.preventDefault();
-            setFormData(CommonUtils.initializeOrResetForm(resourceName));
+            setFormData(CommonUtils.initializeOrResetForm(resourceName, { "itemAvailability": "AVAILABLE" }));
             setOpenNew(true);        
     }
 
     return (
         <>
                 <Box>
-                    <Paper>
+                    <Paper style={{   
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        margin:'auto'
+                    }}>
                         <CommonUtils.TableToolbar tableName="Items"/>
-                        <Button onClick={(e) => {onNew(e)}} variant="contained" className="signUpButton">Add New Item</Button>
-                        <TableContainer component={Paper}>
+                        <Button style={{marginBottom: "5px"}}  onClick={(e) => {onNew(e)}} variant="contained" className="signUpButton">Add New Item</Button>
+                        <TableContainer style={{
+                            border:"1px solid black"
+                        }} component={Paper}>
                             <Table>
                                 <TableHead>
                                     <TableRow>
                                     {
                                         headerFields.map((field, ind) => (
-                                            <TableCell align="right" key={ind}><span className='tCellData'>{field}</span>
+                                            <TableCell align="right" key={ind}><span className='tCellData'>{field.DisplayName}</span>
                                             </TableCell>
                                             
                                             ))
@@ -143,7 +159,7 @@ export default function ItemsMasterData() {
                                     {
                                     tableData.map((row, index) => (
                                         <TableRow key={index}>
-                                            <CommonUtils.TableCellsFromList list={row} />
+                                            <CommonUtils.TableCellsFromList row={row} tableHeader={headerFields} />
                                             <TableCell>
                                                 <div className='tCellData'>
                                                     <Button 

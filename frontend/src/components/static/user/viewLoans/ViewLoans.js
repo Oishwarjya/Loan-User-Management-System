@@ -18,7 +18,11 @@ export default function ViewLoans() {
         if(Object.keys(resourceObject.resource).length == 0 ) {
             resources[resourceName].fields.forEach(field => {
                 tempObj[field.Name] = {...field};
-                tempArr.push(field.DisplayName);
+                tempArr.push(
+                    {
+                        DisplayName: field.DisplayName,
+                        Name: field.Name
+                    });
             });
             setResourceObject({"resource": {...tempObj}});
             tempArr = tempArr.filter(field => field!=="Employee ID");
@@ -63,7 +67,7 @@ export default function ViewLoans() {
                                     <TableRow>
                                     {
                                         headerFields.map((field, ind) => (
-                                            <TableCell align="right" key={ind}><span className='tCellData'>{field}</span></TableCell>
+                                            <TableCell align="right" key={ind}><span className='tCellData'>{field.DisplayName}</span></TableCell>
                                             ))
                                     }
                                     </TableRow>
@@ -72,7 +76,7 @@ export default function ViewLoans() {
                                     {
                                     tableData.map((row, index) => (
                                         <TableRow key={index}>
-                                            <CommonUtils.TableCellsFromList list={row} />
+                                            <CommonUtils.TableCellsFromList row={row} tableHeader={headerFields}  />
                                         </TableRow>
                                     ))
                                     }

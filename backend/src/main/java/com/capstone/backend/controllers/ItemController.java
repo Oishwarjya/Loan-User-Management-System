@@ -41,7 +41,7 @@ public class ItemController {
 
     @PostMapping("/item")
     @ResponseBody
-    public Map<String,String> addItem(@RequestBody Item itm) {
+    public Map<String,Object> addItem(@RequestBody Item itm) {
 
         return itemService.addItem(itm);
     }
@@ -49,13 +49,31 @@ public class ItemController {
     
     @PutMapping("/item")
     @ResponseBody
-    public Map<String, String> updateItem(@Valid @RequestBody Item itm) throws ResourceNotFoundException {
+    public Map<String, Object> updateItem(@Valid @RequestBody Item itm) throws ResourceNotFoundException {
         return itemService.updateItem(itm);
     }
 
     @DeleteMapping("/item/{id}")
-    public Map<String,String> deleteItem(@PathVariable long id) throws ResourceNotFoundException, CannotDeleteRecordException
+    public Map<String,Object> deleteItem(@PathVariable long id) throws ResourceNotFoundException, CannotDeleteRecordException
     {
         return itemService.deleteItem(id);
     }
+
+    @GetMapping("/itemCategories")
+    public Map<String, Object> getItemCategories() {
+        return itemService.getItemCategories();
+    }
+
+    @GetMapping("/itemMakes/{itemCategory}")
+    public Map<String, Object> getItemMakes(@PathVariable String itemCategory) {
+        return itemService.getItemMakes(itemCategory);
+    }
+
+    @GetMapping("/itemDescriptions/{itemCategory}/{itemMake}")
+    public Map<String, Object> getItemDescriptions(
+        @PathVariable String itemCategory, @PathVariable String itemMake
+    ) {
+        return itemService.getItemDescriptions(itemCategory, itemMake);
+    }
+
 }

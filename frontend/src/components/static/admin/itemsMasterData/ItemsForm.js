@@ -23,6 +23,9 @@ export default function ItemsForm(props) {
                     temp[key].Mutable = false;
                 });
             }
+            if(props.btnLabel === "Add Item"){
+                temp.itemAvailability.Mutable = false;
+            }
             setResourceObject({"resource": {...temp}});
         }
     }, []);
@@ -36,46 +39,22 @@ export default function ItemsForm(props) {
         });
     }
 
-    const getDate = (e) => {
-        if(!e) {
-            return "";
-        }
-        let yyyy = e.$y.toString();
-        let mm = (e.$M+1).toString().length==1?("0"+(e.$M+1).toString()):(e.$M+1).toString();
-        let dd = (e.$D).toString().length==1?("0"+(e.$D).toString()):(e.$D).toString();
-        return yyyy+"-"+mm+"-"+dd;
-    }
-
-    const handleDateChange = (e, name) => {
-        setFormData({
-            ...formData,
-            [name]: getDate(e)
-        });
-    }
-
-    const isFormDataValid = (loanStatus) => {
-        const userID_REGEX = new RegExp(/^[a-z]\d{6}$/i);
+    const isFormDataValid = () => {
         var retVal=true;
         var errObj = CommonUtils.initializeOrResetForm(resourceName, {}, { 'onlyString': true});
         Object.keys(formData).forEach((key) => {
-          if(key=="userID") {
-            if(!formData.userID) {
-              errObj.userID = "User ID is required";
-              retVal=false;
-            } else if(!userID_REGEX.test(formData.userID)) {
-              errObj.userID = "User ID must be an alphabet followed by 6 digits";
-              retVal = false;
-            } else errObj.userID="";
-          } else if(loanStatus === "ACTIVE" || loanStatus === "COMPLETED" || (key != "loanDuration" && key != "issueDate")) {
-            
-            if(key === "loanDuration" && formData.loanDuration < 1) {
-                errObj.loanDuration = "Loan Duration must be more than 0";
-                retVal = false;
+            if(key=="itemID") { }
+            else if(key=="itemAvailability") {
+                if(formData.itemAvailability !== "AVAILABLE" &&
+                formData.itemAvailability !== "UNAVAILABLE" &&
+                (!formData.itemAvailability.includes("RESERVED FOR"))) {
+                 errObj.itemAvailability = "Item status can only be AVAILABLE or UNAVAILABLE or RESERVED FOR <loanID>"
+                 retVal = false;
+                 } else errObj.itemAvailability = ""; 
             } else if(!formData[key]) {
               errObj[key] = resourceObject.resource[key].DisplayName + " is required"; 
               retVal=false;
             } else errObj[key]="";
-          }
         });
         setErrors({...errObj});
         return retVal;
@@ -84,12 +63,12 @@ export default function ItemsForm(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
-  //      if(isFormDataValid(formData.loanStatus)) {
+       if(isFormDataValid()) {
             setErrors(CommonUtils.initializeOrResetForm(resourceName, {}, { 'onlyString': true}));
             props.onSubmit(formData);
-     //   } else {
+        } else {
             
-    //    }
+        }
     };
 
     return(

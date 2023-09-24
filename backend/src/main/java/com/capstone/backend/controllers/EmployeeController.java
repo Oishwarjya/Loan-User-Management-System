@@ -46,7 +46,7 @@ public class EmployeeController {
 
     @PostMapping("/employee")
     @ResponseBody
-    public Map<String,String> addEmp(@Valid @RequestBody Employee emp) throws RecordAlreadyExistsException,ResourceNotFoundException {
+    public Map<String,Object> addEmp(@Valid @RequestBody Employee emp) throws RecordAlreadyExistsException,ResourceNotFoundException {
 
         return employeeService.addEmp(emp);
     }
@@ -59,13 +59,13 @@ public class EmployeeController {
     }
 
     @PutMapping("/employee/{id}")
-    public Map<String,String> updateEmp(@RequestBody Employee emp) throws ResourceNotFoundException
+    public Map<String,Object> updateEmp(@RequestBody Employee emp) throws ResourceNotFoundException
     {
         return employeeService.updateEmp(emp);
     }
 
     @DeleteMapping("/employee/{id}")
-    public Map<String,String> deleteEmp(@PathVariable String id) throws ResourceNotFoundException
+    public Map<String,Object> deleteEmp(@PathVariable String id) throws ResourceNotFoundException
     {
         return employeeService.deleteEmp(id);
     }

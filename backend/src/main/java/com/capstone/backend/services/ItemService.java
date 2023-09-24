@@ -38,32 +38,32 @@ public class ItemService {
         Map<String, Object> object = new HashMap<>();
         if(itemList.isEmpty())
         {
-              object.put("statusCode", "200");
+              object.put("statusCode", 200);
               object.put("message", "No Items Found");
               object.put("data",itemList);
               return object;
         }
         else
         {
-              object.put("statusCode", "200");
+              object.put("statusCode", 200);
               object.put("message", "Items retrieved successfully");
               object.put("data",itemList);
               return object;
         }
     }
 
-    public Map< String, String> addItem(Item itm)
+    public Map< String, Object> addItem(Item itm)
     {
-        Map<String, String> object = new HashMap<>();
+        Map<String, Object> object = new HashMap<>();
         itemRepository.save(itm);
-        object.put("statusCode", "200");
+        object.put("statusCode", 200);
         object.put("message", "Item added successfully");
         return object;
     }
 
-    public Map<String,String> updateItem(Item itm) throws ResourceNotFoundException
+    public Map<String,Object> updateItem(Item itm) throws ResourceNotFoundException
     {
-        Map<String, String> object = new HashMap<>();
+        Map<String, Object> object = new HashMap<>();
     
         Item i = itemRepository.findById(itm.getItemID()).orElse(null);
         if(i == null)
@@ -75,15 +75,15 @@ public class ItemService {
         {
           
           itemRepository.save(itm);
-           object.put("statusCode", "200");
+           object.put("statusCode", 200);
           object.put("message", "Item updated successfully");
         }
         return object;
     }
 
-    public Map<String,String> deleteItem(long id) throws ResourceNotFoundException, CannotDeleteRecordException
+    public Map<String,Object> deleteItem(long id) throws ResourceNotFoundException, CannotDeleteRecordException
       {
-          Map<String, String> object = new HashMap<>();
+          Map<String, Object> object = new HashMap<>();
       
           Item i = itemRepository.findById(id).orElse(null);
           if(i == null)
@@ -97,13 +97,36 @@ public class ItemService {
                 throw new CannotDeleteRecordException("Item is already sold, so cannot be deleted. Terminate the loan to delete this item.");
             }
             itemRepository.deleteById(id);
-            object.put("statusCode", "200");
+            object.put("statusCode", 200);
             object.put("message", "Item deleted successfully");
           }
           return object;
       }
-    
 
+    public Map<String, Object> getItemCategories() {
+        Map<String, Object> res = new HashMap<>();
+        List<String> itemCategories = itemRepository.findDistinctItemCategories();
+        res.put("statusCode", 200);
+        res.put("message", "Item categories fetched successfully");
+        res.put("data", itemCategories);
+        return res;
+    }
     
-    
+    public Map<String, Object> getItemMakes(String itemCategory) {
+        Map<String, Object> res = new HashMap<>();
+        List<String> itemMakes = itemRepository.findDistinctItemMakes(itemCategory);
+        res.put("statusCode", 200);
+        res.put("message", "Item makes fetched successfully");
+        res.put("data", itemMakes);
+        return res;
+    }
+
+    public Map<String, Object> getItemDescriptions(String itemCategory, String itemMake) {
+        Map<String, Object> res = new HashMap<>();
+        List<String> itemDescriptions = itemRepository.findDistinctItemDescriptions(itemCategory, itemMake);
+        res.put("statusCode", 200);
+        res.put("message", "Item categories fetched successfully");
+        res.put("data", itemDescriptions);
+        return res;
+    }    
 }
