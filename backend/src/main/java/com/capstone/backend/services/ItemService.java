@@ -125,7 +125,7 @@ public class ItemService {
         Map<String, Object> res = new HashMap<>();
         List<String> itemDescriptions = itemRepository.findDistinctItemDescriptions(itemCategory, itemMake);
         res.put("statusCode", 200);
-        res.put("message", "Item categories fetched successfully");
+        res.put("message", "Item descriptions fetched successfully");
         res.put("data", itemDescriptions);
         return res;
     }    
