@@ -154,7 +154,7 @@ export default function CustomerMasterData() {
                 console.log("For deleting employees: ",res);
                 if(res.hasOwnProperty('status')) {
                     if(res.status>=200 && res.status<300) {
-                        handleDeleteDialogClose();
+                        window.alert("Employee Deleted Successfully");
                     } 
                     else {
                         window.alert("Error " + res.data.message);
@@ -175,7 +175,7 @@ export default function CustomerMasterData() {
                 console.log("For deleting employees: ",res);
                 if(res.hasOwnProperty('status')) {
                     if(res.status>=200 && res.status<300) {
-                        handleDeleteDialogClose();
+                        window.alert("User Deleted Successfully");
                     } 
                     else {
                         window.alert("Error " + res.data.message);
@@ -227,10 +227,6 @@ export default function CustomerMasterData() {
         setFocusedData(row);
         setOpenDeleteDialog(true);
     }
-    const onDeleteUser = (e, row) => {
-        setFocusedData(row);
-        setOpenDeleteDialog(true);
-    }
     const handleDialogClose = () => {
         setOpen(false);
     }
@@ -241,11 +237,17 @@ export default function CustomerMasterData() {
         console.log("Delete the User confirmed");
         if(focusedData.name){
             await deleteEmployee(focusedData.userID);
+            handleDeleteDialogClose();
         }
         else {
             await deleteUser(focusedData.userID);
         }
-        handleDeleteDialogClose();
+        resetPage();
+    }
+    const resetPage = () => {
+        setFocusedData();
+        setOpen(false);
+        setOpenDeleteDialog(false);
     }
     return (
         <>
@@ -305,7 +307,7 @@ export default function CustomerMasterData() {
                                                     onClick={(e) => {startOnboarding(e, row)}}>Onboard</Button>
                                                     <Button 
                                                     variant="text"
-                                                    onClick={(e) => {onDeleteUser(e, row)}}>Delete</Button>
+                                                    onClick={(e) => {onDelete(e, row)}}>Delete</Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>

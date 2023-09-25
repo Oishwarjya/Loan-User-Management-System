@@ -7,6 +7,7 @@ import com.capstone.backend.repositories.UserRepository;
 
 
 import com.capstone.backend.entities.User;
+import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.exceptions.TableEmptyException;
 
 import java.util.*;
@@ -102,6 +103,25 @@ public class UserService{
             return "Invalid ID";
         }
     }
+
+    public Map<String,String> deleteEmp(String id) throws ResourceNotFoundException
+      {
+          Map<String, String> object = new HashMap<>();
+      
+          User e = userRepository.findById(id).orElse(null);
+          if(e == null)
+          {
+                throw new ResourceNotFoundException("User with the given ID does not exist");
+            
+          }
+          else
+          {
+            userRepository.deleteById(id);
+            object.put("statusCode", "200");
+            object.put("message", "Employee deleted successfully");
+          }
+          return object;
+      }
 }
     
 

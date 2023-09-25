@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone.backend.entities.User;
+import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.services.UserService;
 
 import jakarta.validation.Valid;
@@ -49,6 +50,12 @@ public class UserController {
     public Object register(@Valid @RequestBody User user) 
     {
         return userService.register(user);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public Map<String,String> deleteEmp(@PathVariable String id) throws ResourceNotFoundException
+    {
+        return userService.deleteEmp(id);
     }
 
 }
