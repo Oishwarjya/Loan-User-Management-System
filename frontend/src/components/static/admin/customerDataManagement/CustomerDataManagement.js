@@ -294,6 +294,7 @@ export default function CustomerData(props) {
                         variant="outlined"
                         label="Employee Id"
                         name="userID"
+                        disabled={formData.userID!=''}
                         value={formData.userID}
                         onChange={handleInputChange}
                         error={errorData.userID!=''}
