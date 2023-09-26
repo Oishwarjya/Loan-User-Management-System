@@ -102,22 +102,22 @@ export default function CustomerMasterData() {
         isUpdate: false
     });
 
-    const getOnboardedEmployees = async () => {
-        console.log("Getting all the onboarded employees!!");
+    const getOnboardedEmployees = () => {
+        // console.log("Getting all the onboarded employees!!");
         let endpoint_for_onboarded_employees = "/api/employees";
         API.get(endpoint_for_onboarded_employees)
             .then((res) => {
                 // console.log("Onboarded employees: ",res);
                 if(res.hasOwnProperty('status')) {
                     if(res.status>=200 && res.status < 300) {
-                        console.log("Onboarded Data: ",res.data.data);
+                        // console.log("Onboarded Data: ",res.data.data);
                         // onBoardedData = res.data;
                         setOnBoardedData(res.data.data);
                         // console.log(onBoardedData);
                     } else window.alert("Error " + res.data.message);
                 } else {
                   window.alert("Unable to get the onboarded employees");
-                  console.log(res.data);
+                //   console.log(res.data);
                 }
             })
             .catch((err) => {
@@ -126,16 +126,16 @@ export default function CustomerMasterData() {
     }
 
     const getNonOnboardedEmployees = () => {
-        console.log("Getting all the non onboarded employees!!");
+        // console.log("Getting all the non onboarded employees!!");
         let endpoint_for_non_onboarded_employees = "/api/employees/onboard";
         API.get(endpoint_for_non_onboarded_employees)
             .then((res) => {
                 // console.log("Onboarded employees: ",res);
                 if(res.hasOwnProperty('status')) {
                     if(res.status>=200 && res.status < 300) {
-                        console.log("Non onboarded Data: ",res.data);
+                        // console.log("Non onboarded Data: ",res.data);
                         // newEmployeeData = res.data
-                        console.log(getArrayOfValuesFromObj(res.data.data));
+                        // console.log(getArrayOfValuesFromObj(res.data.data));
                         setNewEmployeeData(getArrayOfValuesFromObj(res.data.data));
                     } else window.alert("Error " + res.data.message);
                 } else {
@@ -151,7 +151,7 @@ export default function CustomerMasterData() {
         let endpoint_for_deleting_employee = "/api/employee/"+userID;
         API.del(endpoint_for_deleting_employee)
             .then((res) => {
-                console.log("For deleting employees: ",res);
+                // console.log("For deleting employees: ",res);
                 if(res.hasOwnProperty('status')) {
                     if(res.status>=200 && res.status<300) {
                         window.alert("Employee Deleted Successfully");
@@ -160,7 +160,7 @@ export default function CustomerMasterData() {
                         window.alert("Error " + res.data.message);
                     }
                 } else {
-                    window.alert("Unable to delete the user");
+                    window.alert("Unable to delete the Employee");
                 }
             })
             .catch((err) => {
@@ -172,7 +172,7 @@ export default function CustomerMasterData() {
         let endpoint_for_deleting_employee = "/api/user/"+userID;
         API.del(endpoint_for_deleting_employee)
             .then((res) => {
-                console.log("For deleting employees: ",res);
+                // console.log("For deleting User: ",res);
                 if(res.hasOwnProperty('status')) {
                     if(res.status>=200 && res.status<300) {
                         window.alert("User Deleted Successfully");
@@ -219,7 +219,7 @@ export default function CustomerMasterData() {
             gender: row.gender,
             isUpdate: true
         }
-        console.log("Props object: ",propObj);
+        // console.log("Props object: ",propObj);
         setProps(propObj);
         setOpen(true);
     }
@@ -234,13 +234,14 @@ export default function CustomerMasterData() {
         setOpenDeleteDialog(false);
     }
     const onDeleteConfirmation = async () => {
-        console.log("Delete the User confirmed");
+        // console.log("Delete the User confirmed");
         if(focusedData.name){
             await deleteEmployee(focusedData.userID);
             handleDeleteDialogClose();
         }
         else {
             await deleteUser(focusedData.userID);
+            handleDeleteDialogClose();
         }
         resetPage();
     }
