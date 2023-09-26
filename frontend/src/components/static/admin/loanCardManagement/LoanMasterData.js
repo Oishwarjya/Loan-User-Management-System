@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
@@ -15,17 +15,33 @@ export default function LoanData() {
     const [tableData, setTableData] = useState([]);
     var [headerFields, setHeaderFields] = useState([]);
     const [open, setOpen] = useState(false);
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
 
     const getAllLoans = () => {
         API.get("/api/loans").then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 setTableData([...res.data.data]);
             } else {
-                window.alert("Unable to fetch loans " + res.data.message);
-            }
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch loans " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);            }
         }).catch((err) => {
-            window.alert(err);
-        });
+            popupProps.current = {
+                "title": "Error!",
+                "message": "Unable to fetch loans",
+                "handleAlertClose": () => { setOpenErrorPopup(false);}
+            };   
+            setOpenErrorPopup(true);
+         });
     };
 
     useEffect(() => {
@@ -57,28 +73,58 @@ export default function LoanData() {
     const onDelete = (e, row) => {
         API.del("/api/loan/"+row.loanID).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                window.alert("Deleted loan successfully");
+                popupProps.current = {
+                    "title": "Success!",
+                    "message": "Loan successfully deleted",
+                    "handleAlertClose": () => { setOpenSuccessPopup(false); }
+                };
+                setOpenSuccessPopup(true);
                 getAllLoans();
             } else {
-                window.alert("Unable to delete loan " + res.data.message);
-            }
-        }).catch((err) => {
-            window.alert(err);
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to delete loan " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true); 
+        }
+        }).catch(err => { 
+            popupProps.current = {
+            "title": "Error!",
+            "message": "Unable to delete loan",
+            "handleAlertClose": () => { setOpenErrorPopup(false);}
+            };   
+            setOpenErrorPopup(true); 
         });
     }
 
     const onUpdate = (data) => {
         API.put("/api/loan", {...data}).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                window.alert("Updated loan successfully");
+                popupProps.current = {
+                    "title": "Update Successful!",
+                    "message": "Loan successfully updated",
+                    "handleAlertClose": () => { setOpenSuccessPopup(false); }
+                };
+                setOpenSuccessPopup(true);
+                handleDialogClose();
                 getAllLoans();
             } else {
-                window.alert("Unable to update loan " + res.data.message);
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to update loan " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true); 
             }
-       }).catch((err) => {
-            window.alert(err);
-        });
-        handleDialogClose();
+            }).catch(err => { 
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to update loan",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+            });
     }
     return (
         <>
@@ -133,6 +179,8 @@ export default function LoanData() {
                         </DialogContent>
                     </Dialog>
                 </Box>
+            {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+            {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
 
         </>
     );

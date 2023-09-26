@@ -17,6 +17,13 @@ export default function ApplyForLoans() {
     const [itemCategoryOptions, setItemCategoryOptions] = useState([]);
     const [itemMakeOptions, setItemMakeOptions] = useState([]);
     const [itemDescOptions, setItemDescOptions] = useState([]);
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
 
     useEffect(() => {
         var temp= {}
@@ -37,9 +44,22 @@ export default function ApplyForLoans() {
                         }
                     });
                 } else {
-                    window.alert("Unable to fetch item categories");
+                    popupProps.current = {
+                        "title": "Error!",
+                        "message": "Unable to fetch item categories",
+                        "handleAlertClose": () => { setOpenErrorPopup(false);}
+                    };   
+                    setOpenErrorPopup(true); 
+
                 }
-            }).catch((err) => { window.alert(err); });
+            }).catch((err) => { 
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch item categories",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true); 
+        });
         }
     }, []);
 
@@ -83,7 +103,7 @@ export default function ApplyForLoans() {
                             "name": "itemDescription", 
                             "value": res.data.data[0],
                             "itemCategory": e.target.hasOwnProperty('itemCategory')?e.target.itemCategory:formData.itemCategory,
-                            "itemMake": e.target.hasOwnProperty('itemMake')?e.target.itemMake:formData.itemMake,
+                            "itemMake": e.target.hasOwnProperty('itemMake')?e.target.itemMake:value,
                             "itemDescription": res.data.data[0]
                         }
                     });
@@ -110,12 +130,29 @@ export default function ApplyForLoans() {
     const handleSubmit = () => {
         API.post("/api/loan", formData).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                window.alert("Loan worth "+res.data.itemValue + " has been applied for");
-                navigate('/user/'+userID);
+                popupProps.current = {
+                    "title": "Application Successful!",
+                    "message": "Loan worth "+res.data.itemValue + " has been applied for",
+                    "handleAlertClose": () => { setOpenSuccessPopup(false); navigate('/user/'+userID); }
+                };
+                setOpenSuccessPopup(true);
+                
             } else {
-                window.alert("Unable to process application " + res.data.message);
+                    popupProps.current = {
+                        "title": "Application Failed!",
+                        "message": "Unable to process application " + res.data.message,
+                        "handleAlertClose": () => { setOpenErrorPopup(false);}
+                    };   
+                    setOpenErrorPopup(true); 
             }
-        }).catch(err => window.alert(err));
+        }).catch(err => { 
+            popupProps.current = {
+                "title": "Application Failed!",
+                "message": "Unable to process application ",
+                "handleAlertClose": () => { setOpenErrorPopup(false);}
+            };   
+            setOpenErrorPopup(true); 
+        });
     }
 
     const getOptions = (arr) => {
@@ -175,6 +212,8 @@ export default function ApplyForLoans() {
           <Button onClick={(e) => { e.preventDefault(); handleSubmit() }} variant="contained" className="apply-for-loans-button">Apply</Button>
           </CardActions>
         </Card>
+            {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+            {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
         </div>        
     </>
     );

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from '../../../common/CommonUtils';
 import ItemsForm from './ItemsForm';
 import * as API from '../../../services/ApiRequestService';
-import dayjs from 'dayjs';
 
 export default function ItemsMasterData() {
     const resourceName = "items";
@@ -16,34 +15,33 @@ export default function ItemsMasterData() {
     var [headerFields, setHeaderFields] = useState([]);
     const [openEdit, setOpenEdit] = useState(false);
     const [openNew, setOpenNew] = useState(false);
-
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
+    
     const getAllItems = () => {
         API.get("/api/items").then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 setTableData([...res.data.data]);
             } else {
-                window.alert("Unable to fetch loans " + res.data.message);
-            }
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch items " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);            }
         }).catch((err) => {
-            window.alert(err);
-        });
-        // var data = [{
-        //     itemID: 5,
-        //     itemCategory: "Furniture",
-        //     itemMake: "Wooden",
-        //     itemDescription: "Chair",
-        //     itemValue: 1500,
-        //     itemAvailability: "AVAILABLE"
-        // },
-        // {
-        //     itemID: 2,
-        //     itemCategory: "Furniture",
-        //     itemMake: "Steel",
-        //     itemDescription: "Bed",
-        //     itemValue: 1500,
-        //     itemAvailability: "UNAVAILABLE"
-        // }];
-        // setTableData([...data]);
+            popupProps.current = {
+                "title": "Error!",
+                "message": "Unable to fetch items",
+                "handleAlertClose": () => { setOpenErrorPopup(false);}
+            };   
+            setOpenErrorPopup(true);
+         });
     };
 
     useEffect(() => {
@@ -76,28 +74,58 @@ export default function ItemsMasterData() {
     const onDelete = (e, row) => {
         API.del("/api/item/"+row.itemID).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                window.alert("Deleted item successfully");
+                popupProps.current = {
+                    "title": "Success!",
+                    "message": "Item successfully deleted",
+                    "handleAlertClose": () => { setOpenSuccessPopup(false); }
+                };
+                setOpenSuccessPopup(true);
                 getAllItems();
             } else {
-                window.alert("Unable to delete item" + res.data.message);
-            }
-        }).catch((err) => {
-            window.alert(err);
-        });
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to delete item " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true); 
+        }
+    }).catch(err => { 
+        popupProps.current = {
+            "title": "Error!",
+            "message": "Unable to delete item",
+            "handleAlertClose": () => { setOpenErrorPopup(false);}
+        };   
+        setOpenErrorPopup(true); 
+    });
     }
 
     const onUpdate = (data) => {
         API.put("/api/item", {...data}).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                window.alert("Updated item successfully");
+                popupProps.current = {
+                    "title": "Update Successful!",
+                    "message": "Item successfully updated",
+                    "handleAlertClose": () => { setOpenSuccessPopup(false); }
+                };
+                setOpenSuccessPopup(true);
+                handleEditDialogClose();
                 getAllItems();
             } else {
-                window.alert("Unable to update item " + res.data.message);
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to update item " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true); 
             }
-       }).catch((err) => {
-            window.alert(err);
-        });
-        handleEditDialogClose();
+            }).catch(err => { 
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to update item",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+            });
     }
 
     const onAdd = (data) => {
@@ -107,15 +135,30 @@ export default function ItemsMasterData() {
         }
         API.post("/api/item", {...data}).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                window.alert("Added item successfully");
+                popupProps.current = {
+                    "title": "Update Successful!",
+                    "message": "Item successfully updated",
+                    "handleAlertClose": () => { setOpenSuccessPopup(false); }
+                };
+                setOpenSuccessPopup(true);
+                handleNewDialogClose();
                 getAllItems();
             } else {
-                window.alert("Unable to add item " + res.data.message);
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to add item " + res.data.message,
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true); 
             }
-       }).catch((err) => {
-            window.alert(err);
-        });
-        handleNewDialogClose();
+            }).catch(err => { 
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to add item",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+            });
     }
 
     const onNew = (e) => {
@@ -194,7 +237,8 @@ export default function ItemsMasterData() {
                         </DialogContent>
                     </Dialog>
                 </Box>
-
+            {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+            {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
         </>
     );
 }

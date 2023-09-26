@@ -1,5 +1,12 @@
 import resources from '../../resourcemap.config.json';
 import { TableCell, Toolbar, Typography } from '@mui/material';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 /**
  * Initializes or resets a form
@@ -35,9 +42,6 @@ export function TableCellsFromList(props) {
     const { row, tableHeader } = props;
     let items=[];
     if(typeof row=="object") {
-        // for(let key in list){
-        //     items.push(list[key]);
-        // }
         tableHeader.forEach((column) => {
             items.push(row[column.Name]);
         })
@@ -81,3 +85,78 @@ export function TableToolbar(props) {
         </Toolbar>
     )
 }
+
+
+export function SuccessAlert(props) {
+  const [open, setOpen] = React.useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    props.handleAlertClose();
+  };
+
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+            style: {
+                backgroundImage: "linear-gradient(to right, rgb(102, 209, 155, 0.5) 0%, rgb(255,255,255,0.5) 130%)"
+            }
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {props.title}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {props.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>OK</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+export function ErrorAlert(props) {
+    const [open, setOpen] = React.useState(true);
+  
+    const handleClose = () => {
+      setOpen(false);
+      props.handleAlertClose();
+    };
+  
+    return (
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          PaperProps={{
+              style: {
+                  backgroundImage: "linear-gradient(to right, rgb(241, 137, 137, 0.5) 0%, rgb(255,255,255,0.5) 130%)"
+              }
+          }}
+        >
+          <DialogTitle id="alert-dialog-title">
+            {props.title}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {props.message}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>OK</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
