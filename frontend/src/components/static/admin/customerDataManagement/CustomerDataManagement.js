@@ -9,6 +9,8 @@ import './styles.css';
 import data from '../../../../resourcemap.config.json';
 import * as API from '../../../services/ApiRequestService';
 import dayjs from 'dayjs';
+import { publish } from '../../../common/Events';
+
 
 export default function CustomerData(props) {
     const { userID_prop, name_prop, designation_prop, department_prop, dob_prop, doj_prop, gender_prop, for_update_prop } = props;
@@ -228,16 +230,16 @@ export default function CustomerData(props) {
         if(areAllFieldsValid()) {
             API.post("/api/employee",{...formData})
               .then((res) => {
-                if(res.data.hasOwnProperty('statusCode')) {
-                    if(res.data.statusCode>=200 && res.data.statusCode < 300) {
-                        window.alert("Employee Added");
-                        // navigate('/admin/'+userID);
-                    } else window.alert("Error " + res.data.message);
+                if(res.data.statusCode>=200 && res.data.statusCode < 300) {
+                    // window.alert("Employee Added");
+                    publish("closeEmpForm", {"title": "Success!", "message": "Employee Added Successfully"})
+                    // navigate('/admin/'+userID);
                 } else {
-                  window.alert("Employee addition failed" );
+                //   window.alert("Employee addition failed" );
+                    publish("error", {"title": "Error!", "message": res.data.message});
                 }
               })
-              .catch(err => { window.alert(err)});
+              .catch(err => { publish("error", {"title": "Error!", "message": "Unable to Add Employee"}); });
         }
         else {
             console.log(formData);
@@ -247,17 +249,14 @@ export default function CustomerData(props) {
         if(areAllFieldsValid()) {
             API.put("/api/employee/"+userID_prop, {...formData})
                 .then((res) => {
-                    if(res.data.hasOwnProperty('statusCode')) {
-                        if(res.data.statusCode>=200 && res.data.statusCode<300) {
-                            window.alert("Employee Data Updated");
-                        } else {
-                            window.alert("Error: "+ res.data.message);
-                        }
+                    if(res.data.statusCode>=200 && res.data.statusCode<300) {
+                        // window.alert("Employee Data Updated");
+                        publish("closeEmpForm", {"title": "Success!", "message": "Employee Data Updated Successfully"})
                     } else {
-                        window.alert("Employee addition failed");
+                        publish("error", {"title": "Error!", "message": res.data.message});
                     }
                 })
-                .catch(err => { window.alert(err)});
+                .catch(err => { publish("error", {"title": "Error!", "message": "Unable to Add Employee"}); });
         }
         else {
             console.log(formData);

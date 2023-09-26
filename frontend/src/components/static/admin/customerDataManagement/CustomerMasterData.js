@@ -1,8 +1,10 @@
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
-import { React, useEffect, useState } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import CustomerData from './CustomerDataManagement';
 import * as API from '../../../services/ApiRequestService';
+import * as CommonUtils from '../../../common/CommonUtils';
 import dayjs from 'dayjs';
+import { subscribe } from '../../../common/Events';
 
 // function createData(userID, name, designation, department, gender, dob, doj) {
 //     return {userID, name, designation, department, gender, dob, doj};
@@ -91,6 +93,13 @@ export default function CustomerMasterData() {
     const [onBoardedData, setOnBoardedData] = useState([]);
     const [newEmployeeData, setNewEmployeeData] = useState([]);
     const [focusedData, setFocusedData] = useState();
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
     const [props, setProps] = useState({
         userID: "",
         name: "",
@@ -102,48 +111,56 @@ export default function CustomerMasterData() {
         isUpdate: false
     });
 
+    const callErrPopup = (title, message) => {
+        popupProps.current = {
+            "title": title,
+            "message": message,
+            "handleAlertClose": () => { setOpenErrorPopup(false);}
+        };   
+        setOpenErrorPopup(true); 
+    }
+
+    const callSuccessPopup = (title, message) => {
+        popupProps.current = {
+            "title": title,
+            "message": message,
+            "handleAlertClose": () => { setOpenSuccessPopup(false); }
+        };
+        setOpenSuccessPopup(true);
+    }
+
     const getOnboardedEmployees = () => {
         // console.log("Getting all the onboarded employees!!");
         let endpoint_for_onboarded_employees = "/api/employees";
         API.get(endpoint_for_onboarded_employees)
             .then((res) => {
                 // console.log("Onboarded employees: ",res);
-                if(res.hasOwnProperty('status')) {
-                    if(res.status>=200 && res.status < 300) {
-                        // console.log("Onboarded Data: ",res.data.data);
-                        // onBoardedData = res.data;
-                        setOnBoardedData(res.data.data);
-                        // console.log(onBoardedData);
-                    } else window.alert("Error " + res.data.message);
-                } else {
-                  window.alert("Unable to get the onboarded employees");
-                //   console.log(res.data);
+                if(res.status>=200 && res.status < 300) {
+                    // console.log("Onboarded Data: ",res.data.data);
+                    // onBoardedData = res.data;
+                    setOnBoardedData(res.data.data);
+                    // console.log(onBoardedData);
+                } else{
+                    callErrPopup("Error!", res.data.message);
                 }
             })
             .catch((err) => {
-                window.alert(err);
+                callErrPopup("Error!", "Unable to get Employees");
             });
     }
 
     const getNonOnboardedEmployees = () => {
-        // console.log("Getting all the non onboarded employees!!");
         let endpoint_for_non_onboarded_employees = "/api/employees/onboard";
         API.get(endpoint_for_non_onboarded_employees)
             .then((res) => {
-                // console.log("Onboarded employees: ",res);
-                if(res.hasOwnProperty('status')) {
-                    if(res.status>=200 && res.status < 300) {
-                        // console.log("Non onboarded Data: ",res.data);
-                        // newEmployeeData = res.data
-                        // console.log(getArrayOfValuesFromObj(res.data.data));
-                        setNewEmployeeData(getArrayOfValuesFromObj(res.data.data));
-                    } else window.alert("Error " + res.data.message);
-                } else {
-                  window.alert("Unable to get the non onboarded employees");
+                if(res.status>=200 && res.status < 300) {
+                    setNewEmployeeData(getArrayOfValuesFromObj(res.data.data));
+                } else{
+                    callErrPopup("Error!", res.data.message);
                 }
             })
             .catch((err) => {
-                window.alert(err);
+                callErrPopup("Error!", "Unable to get Users");
             });
     }
 
@@ -151,20 +168,15 @@ export default function CustomerMasterData() {
         let endpoint_for_deleting_employee = "/api/employee/"+userID;
         API.del(endpoint_for_deleting_employee)
             .then((res) => {
-                // console.log("For deleting employees: ",res);
-                if(res.hasOwnProperty('status')) {
-                    if(res.status>=200 && res.status<300) {
-                        window.alert("Employee Deleted Successfully");
-                    } 
-                    else {
-                        window.alert("Error " + res.data.message);
-                    }
-                } else {
-                    window.alert("Unable to delete the Employee");
+                if(res.status>=200 && res.status<300) {
+                    callSuccessPopup("Success!", "Employee Deleted Successfully");
+                } 
+                else {
+                    callErrPopup("Error!", res.data.message);
                 }
             })
             .catch((err) => {
-                window.alert(err);
+                callErrPopup("Error!", "Unable to Delete Employee");
             });
     }
 
@@ -172,27 +184,35 @@ export default function CustomerMasterData() {
         let endpoint_for_deleting_employee = "/api/user/"+userID;
         API.del(endpoint_for_deleting_employee)
             .then((res) => {
-                // console.log("For deleting User: ",res);
-                if(res.hasOwnProperty('status')) {
-                    if(res.status>=200 && res.status<300) {
-                        window.alert("User Deleted Successfully");
-                    } 
-                    else {
-                        window.alert("Error " + res.data.message);
-                    }
-                } else {
-                    window.alert("Unable to delete the user");
+                if(res.status>=200 && res.status<300) {
+                    callSuccessPopup("Success!", "User Deleted Successfully");
+                } 
+                else {
+                    callErrPopup("Error!", res.data.message);
                 }
             })
             .catch((err) => {
-                window.alert(err);
+                callErrPopup("Error!", "Unable to Delete Employee");
             });
     }
 
+    const onEmpCompleteForm = (e) => {
+        console.log("Event has been called with data:", e.detail);
+        setOpen(false);
+        callSuccessPopup(e.detail.title, e.detail.message);
+    }
+
+    const onErrorEmpForm = (e) => {
+        setOpen(false);
+        callErrPopup(e.detail.title, e.detail.message);
+    }
+
     useEffect(() => {
+        subscribe("closeEmpForm", onEmpCompleteForm);
+        subscribe("error", onErrorEmpForm);
         getOnboardedEmployees();
         getNonOnboardedEmployees();
-    }, [open, openDeleteDialog]);
+    }, [open, openDeleteDialog, openSuccessPopup, openErrorPopup]);
 
     const startOnboarding = (e, row) => {
         let propObj = {
@@ -339,6 +359,8 @@ export default function CustomerMasterData() {
                     <Button onClick={onDeleteConfirmation}>Yes</Button>
                 </DialogActions>
             </Dialog>
+            {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+            {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
         </>
     );
 }
