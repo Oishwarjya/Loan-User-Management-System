@@ -1,4 +1,4 @@
-import {useEffect, useState, React, useReducer} from "react";
+import {useEffect, useState, React, useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import resources from '../../../../resourcemap.config.json';
 import * as CommonUtils from "../../../common/CommonUtils";
@@ -11,8 +11,8 @@ export default function ApplyForLoans() {
     let navigate = useNavigate();
     const resourceName = "applyLoans";
     const {userID} = useParams();
-    const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {"userID": userID, "itemCategory": "Furniture", "itemMake": "Wooden", "itemDescription": "Chair"}));
-    const [options, setOptions] = useState({"itemCategory": [], "itemMake": [], "itemDescription": []});
+    const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {"userID": userID}));
+    const options = useRef({"itemCategory": [], "itemMake": [], "itemDescription": []});
     const [resourceObject, setResourceObject] = useState({"resource": {}});
     const [itemCategoryOptions, setItemCategoryOptions] = useState([]);
     const [itemMakeOptions, setItemMakeOptions] = useState([]);
@@ -22,13 +22,13 @@ export default function ApplyForLoans() {
         var temp= {}
         if(Object.keys(resourceObject.resource).length == 0 ) {
             resources[resourceName].fields.forEach(field => temp[field.Name] = {...field});
-            setItemCategoryOptions(["Furniture", "Stationary"]);
-            setItemMakeOptions(["Wooden", "Steel", "Cotton"]);
-            setItemDescOptions(["Chair","Table"]);
             setResourceObject({"resource": {...temp}});
             API.get("/api/itemCategories").then(async (res) => {
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                    setItemCategoryOptions([...res.data.data]);
+                    options.current = {
+                        ...options.current,
+                        itemCategory: res.data.data
+                    };
                     await handleSelectChange({
                         "target": {
                             "name": "itemCategory", 
@@ -53,29 +53,31 @@ export default function ApplyForLoans() {
 
     const handleSelectChange = async (e) => {
         const {name, value} = e.target;
-        var changes = { [name]: value};
-        var tempOptions = [];
         if(name=="itemCategory") { 
-            tempOptions = value=="Furniture"?["Wooden", "Steel", "Cotton"]:["Reynolds", "Faber Castle"];
             API.get("/api/itemMakes/"+value.replace(" ", "%20")).then(async (res) => {
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                    setItemMakeOptions([...res.data.data]);
+                    options.current = {
+                        ...options.current,
+                        itemMake: res.data.data
+                    };
                     await handleSelectChange({
                         "target": {
                             "name": "itemMake", 
                             "value": res.data.data[0],
-                            "itemCategory": e.target.hasOwnProperty('itemCategory')?e.target.itemCategory:formData.itemCategory,
+                            "itemCategory": e.target.hasOwnProperty('itemCategory')?e.target.itemCategory:value,
                             "itemMake": res.data.data[0]
                         }
                     });
                 }
             });
         } else if(name == "itemMake") {
-            tempOptions = value=="Furniture"?["Wooden", "Steel", "Cotton"]:["Reynolds", "Faber Castle"];
             var category = e.target.hasOwnProperty("itemCategory")?e.target.itemCategory:formData.itemCategory;
             API.get("/api/itemDescriptions/"+category.replace(" ", "%20")+"/"+value.replace(" ","%20")).then(async (res) => {
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
-                    setItemDescOptions([...res.data.data]);
+                    options.current = {
+                        ...options.current,
+                        itemDescription: res.data.data
+                    };
                     await handleSelectChange({
                         "target": {
                             "name": "itemDescription", 
@@ -90,6 +92,9 @@ export default function ApplyForLoans() {
         } else if(name == "itemDescription") {
             var category = e.target.hasOwnProperty("itemCategory")?e.target.itemCategory:formData.itemCategory;
             var make = e.target.hasOwnProperty("itemMake")?e.target.itemMake:formData.itemMake;
+            setItemCategoryOptions([...options.current.itemCategory]);
+            setItemMakeOptions([...options.current.itemMake]);
+            setItemDescOptions([...options.current.itemDescription]);
             setFormData((prev) => {
                 return ({
                     ...prev,
@@ -100,31 +105,10 @@ export default function ApplyForLoans() {
             });
         }
 
-        // if(name=="itemMake") tempOptions = value=="Wooden"?["Chair", "Table"]: value=="Steel"?["Bed","Curtain Rod"]:value=="Reynolds"?["Pen","Pencil"]:["Crayons", "Pencil"];
-        // var tempName = name=="itemCategory"?"itemMake":name=="itemMake"?"itemDescription":"";
-        // if(tempName!==""){
-        //    changes[tempName] = tempOptions[0];
-        //    if(tempName === "itemMake") {
-        //     setItemMakeOptions([...tempOptions]);
-        //    } else if (tempName === "itemDescription") {
-        //     setItemDescOptions([...tempOptions]);
-        //     }
-        // //    setOptions((prev) => {
-        // //     return({
-        // //     ...prev,
-        // //     [tempName]:tempOptions})
-        // //     }); 
-        //     setFormData((prev) => {return({...prev, ...changes})});
-        //     await handleSelectChange({"target": {"name": tempName, "value": tempOptions[0]}});
-        // } else setFormData((prev) => {return({...prev, ...changes})});
-        
-
     }
 
     const handleSubmit = () => {
-        console.log(formData);
         API.post("/api/loan", formData).then((res) => {
-            console.log(res);
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 window.alert("Loan worth "+res.data.itemValue + " has been applied for");
                 navigate('/user/'+userID);
@@ -135,7 +119,6 @@ export default function ApplyForLoans() {
     }
 
     const getOptions = (arr) => {
-        console.log(arr);
         return arr.map((option, index) => {
             return (<MenuItem value={option} key={index}>{option}</MenuItem>);
         });
