@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useRef } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -14,8 +14,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import * as ResourceService from '../../services/ResourceService';
+import * as CommonUtils from '../../common/CommonUtils';
 import * as API from '../../services/ApiRequestService';
 import './styles.css';
 
@@ -29,6 +28,13 @@ export default function SignIn() {
     const [errors, setErrors] = useState({
         userID: "",
         password: ""
+    });
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
     });
 
     const handleClickShowPassword = (e) => {
@@ -91,16 +97,26 @@ export default function SignIn() {
               "password": formData.password
             })
             .then((res) => {
-              if(res.data.hasOwnProperty('authStatus')) {
-                if(res.data.authStatus) {
-                  if(res.data.role == "user") navigate("/user/"+formData.userID);
-                  else if(res.data.role == "admin") navigate("/admin/"+formData.userID);
-                }else window.alert("User login failed")
-              } else {
-                window.alert("User login failed. " );
+              if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+                if(res.data.role == "user") navigate("/user/"+formData.userID);
+                else if(res.data.role == "admin") navigate("/admin/"+formData.userID);
+            } else {
+                popupProps.current = {
+                  "title": "Error!",
+                  "message": "Unable to login: " + res.data.message,
+                  "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);  
               }
             })
-            .catch(err => { window.alert(err)});
+            .catch(err => { 
+              popupProps.current = {
+                  "title": "Error!",
+                  "message": "Unable to login",
+                  "handleAlertClose": () => { setOpenErrorPopup(false);}
+              };   
+              setOpenErrorPopup(true); 
+            });        
           } else {
         };
     }
@@ -163,6 +179,9 @@ export default function SignIn() {
       <Button variant="contained" className="signInButton" onClick={handleSubmit}>Sign In</Button>
       </CardActions>
     </Card>
+    {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+    {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
+
     </div>
   );
 }

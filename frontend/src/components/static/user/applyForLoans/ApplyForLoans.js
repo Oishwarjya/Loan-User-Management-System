@@ -132,7 +132,7 @@ export default function ApplyForLoans() {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 popupProps.current = {
                     "title": "Application Successful!",
-                    "message": "Loan worth "+res.data.itemValue + " has been applied for",
+                    "message": "Loan worth INR "+res.data.itemValue + " has been applied for",
                     "handleAlertClose": () => { setOpenSuccessPopup(false); navigate('/user/'+userID); }
                 };
                 setOpenSuccessPopup(true);

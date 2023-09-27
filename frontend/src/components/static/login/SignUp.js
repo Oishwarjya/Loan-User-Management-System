@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useRef } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import { FormHelperText } from '@mui/material';
 import * as API from '../../services/ApiRequestService';
+import * as CommonUtils from '../../common/CommonUtils';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import './styles.css';
@@ -27,6 +28,14 @@ export default function SignUp() {
         userID: "",
         password: ""
     });
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
+
 
     const handleClickShowPassword = (e) => {
         e.preventDefault();
@@ -89,16 +98,31 @@ export default function SignUp() {
             "password": formData.password
           })
           .then((res) => {
-            if(res.data.hasOwnProperty('availStatus')) {
-              if(res.data.availStatus) {
-                window.alert("User Added");
-                setFormData({ userID: "", password: ""});
-              } else window.alert("User registration failed")
+            if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
+              popupProps.current = {
+                  "title": "Success!",
+                  "message": "User added",
+                  "handleAlertClose": () => { setOpenSuccessPopup(false); }
+              };
+              setOpenSuccessPopup(true);
+              setFormData({ userID: "", password: ""});
             } else {
-              window.alert("User registration failed. " );
+              popupProps.current = {
+                "title": "Error!",
+                "message": "Unable to register new user: " + res.data.message,
+                "handleAlertClose": () => { setOpenErrorPopup(false);}
+              };   
+              setOpenErrorPopup(true);  
             }
           })
-          .catch(err => { window.alert(err)});
+          .catch(err => { 
+            popupProps.current = {
+                "title": "Error!",
+                "message": "Unable to register new user",
+                "handleAlertClose": () => { setOpenErrorPopup(false);}
+            };   
+            setOpenErrorPopup(true); 
+          });        
         } else {
         }
     }
@@ -160,6 +184,9 @@ export default function SignUp() {
       <Button onClick={handleSubmit} variant="contained" className="signUpButton">Sign Up</Button>
       </CardActions>
     </Card>
+    {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+    {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
+
     </div>
   );
 }

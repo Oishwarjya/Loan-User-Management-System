@@ -3,6 +3,7 @@ package com.capstone.backend.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.capstone.backend.repositories.EmployeeRepository;
 import com.capstone.backend.repositories.UserRepository;
 
 
@@ -22,6 +23,9 @@ public class UserService{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     
     public UserService() {
     }
@@ -32,7 +36,7 @@ public class UserService{
     }
 
     
-     public Object login(User user) {
+     public Map<String, Object> login(User user) {
 
          Map<String, Object> object = new HashMap<>();
          User user1 = userRepository.findById(user.getUserID()).orElse(null);
@@ -42,21 +46,33 @@ public class UserService{
         if(matcher.matches())
         {
             if (user1 == null) {
-             object.put("authStatus", false);
-             object.put("role", null);
+                object.put("authStatus", false);
+                object.put("statusCode", 404);
+                object.put("message", "User not found");
+                object.put("role", null);
              return object;
              }
-
+            if(!(StringUtils.equalsIgnoreCase(user.getUserID(), "K123456")) && !(employeeRepository.existsById(user.getUserID()))) {
+                object.put("authStatus", false);
+                object.put("statusCode", 400);
+                object.put("message", "Employee not onboarded yet");
+                object.put("role", null);
+                return object;
+            }
             if(StringUtils.equalsIgnoreCase(user.getUserID(), "K123456")){
                  if(StringUtils.equals(user.getPassword(),admin.getPassword()))
                  {
                      object.put("authStatus", true);
+                     object.put("statusCode", 200);
+                     object.put("message", "Log in successfull");
                      object.put("role", "admin");
                  }
              else
              {
                  object.put("authStatus", false);
-                 object.put("role", "admin");
+                 object.put("statusCode", 400);
+                 object.put("message", "Incorrect password");
+                 object.put("role", null);
              }
             
          }
@@ -64,12 +80,16 @@ public class UserService{
              if(StringUtils.equals(user1.getPassword(),user.getPassword()))
              {
                      object.put("authStatus", true);
+                     object.put("statusCode", 200);
+                     object.put("message", "Log in successfull");
                      object.put("role", "user");
              }
              else
              {
                  object.put("authStatus", false);
-                 object.put("role", "user");
+                 object.put("statusCode", 400);
+                 object.put("message", "Incorrect password");
+                 object.put("role", null);
              }
             
          }
@@ -78,12 +98,15 @@ public class UserService{
         }
         else
         {
-            return "Invalid ID";
+            object.put("availStatus", false);
+            object.put("statusCode", 400);
+            object.put("message", "Invalid ID");
+            return object;
         }
     }
     
 
-    public Object register(User user) {
+    public Map<String,Object> register(User user) {
         Pattern pattern = Pattern.compile("[a-z]\\d\\d\\d\\d\\d\\d", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(user.getUserID());
         Map<String, Object> object = new HashMap<>();
@@ -91,16 +114,23 @@ public class UserService{
             User user1 = userRepository.findById(user.getUserID()).orElse(null);
             if (user1 == null) {
                 object.put("availStatus", true);
+                object.put("statusCode", 200);
+                object.put("message", "User added successfully");
                 userRepository.save(user);
                 return object;
             }
             else{
                 object.put("availStatus", false);
+                object.put("statusCode", 400);
+                object.put("message", "User already exists");
                 return object;
             }
         }
         else{
-            return "Invalid ID";
+                object.put("availStatus", false);
+                object.put("statusCode", 400);
+                object.put("message", "Invalid ID");
+                return object;
         }
     }
 

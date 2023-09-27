@@ -17,7 +17,7 @@ export default function ItemsMasterData() {
     const [openNew, setOpenNew] = useState(false);
     const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
     const [openErrorPopup, setOpenErrorPopup] = useState(false);
-    const popupProps = useState({
+    const popupProps = useRef({
         "title": "",
         "message": "",
         "handleAlertClose": null

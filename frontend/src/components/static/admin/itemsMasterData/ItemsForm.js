@@ -62,7 +62,6 @@ export default function ItemsForm(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
        if(isFormDataValid()) {
             setErrors(CommonUtils.initializeOrResetForm(resourceName, {}, { 'onlyString': true}));
             props.onSubmit(formData);

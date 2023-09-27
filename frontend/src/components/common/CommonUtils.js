@@ -12,6 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
  * Initializes or resets a form
  * @param {String} resourceName Takes the resource name as per resourcemap.config
  * @param {Object} init Takes the initial configs as parameter 
+ * @param {Object} options Takes additional loptions as parameter to set configs of the returned value like onlyString
  * @returns The initialized formData object that you can put as a parameter in the setFormData method
  */
 export const initializeOrResetForm = (resourceName, init, options = null) => {

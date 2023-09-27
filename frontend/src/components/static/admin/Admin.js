@@ -17,7 +17,7 @@ export default function Admin() {
         <AppBar position="fixed" className='tool-bar'>
             <Toolbar>
                 <Typography style={{color:'black'}} variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Admin Dashboard: User {userID}
+                    Loan Management Application - Admin
                 </Typography>
                 <Link to={"/admin/" + userID}>
                     <HomeIcon className="home-icon" style={{color:"black", padding:5+'px'}} />
