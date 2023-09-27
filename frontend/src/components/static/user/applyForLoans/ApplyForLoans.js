@@ -140,7 +140,7 @@ export default function ApplyForLoans() {
             } else {
                     popupProps.current = {
                         "title": "Application Failed!",
-                        "message": "Unable to process application " + res.data.message,
+                        "message": "Unable to process application: " + res.data.message,
                         "handleAlertClose": () => { setOpenErrorPopup(false);}
                     };   
                     setOpenErrorPopup(true); 

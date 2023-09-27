@@ -42,7 +42,7 @@ export default function ItemsPurchased() {
                 } else {
                     popupProps.current = {
                         "title": "Error!",
-                        "message": "Unable to fetch employee details " + res.data.message,
+                        "message": "Unable to fetch employee details: " + res.data.message,
                         "handleAlertClose": () => { setOpenErrorPopup(false);}
                     };   
                     setOpenErrorPopup(true);            }
@@ -62,7 +62,7 @@ export default function ItemsPurchased() {
                 } else {
                     popupProps.current = {
                         "title": "Error!",
-                        "message": "Unable to fetch purchased items " + res.data.message,
+                        "message": "Unable to fetch purchased items: " + res.data.message,
                         "handleAlertClose": () => { setOpenErrorPopup(false);}
                     };   
                     setOpenErrorPopup(true);            }

@@ -30,7 +30,7 @@ export default function LoanData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to fetch loans " + res.data.message,
+                    "message": "Unable to fetch loans: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true);            }
@@ -83,7 +83,7 @@ export default function LoanData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to delete loan " + res.data.message,
+                    "message": "Unable to delete loan: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true); 
@@ -112,7 +112,7 @@ export default function LoanData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to update loan " + res.data.message,
+                    "message": "Unable to update loan: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true); 

@@ -30,7 +30,7 @@ export default function Admin() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to fetch employee details " + res.data.message,
+                    "message": "Unable to fetch employee details: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true);            }

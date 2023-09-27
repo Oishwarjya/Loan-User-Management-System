@@ -30,7 +30,7 @@ export default function ItemsMasterData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to fetch items " + res.data.message,
+                    "message": "Unable to fetch items: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true);            }
@@ -84,7 +84,7 @@ export default function ItemsMasterData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to delete item " + res.data.message,
+                    "message": "Unable to delete item: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true); 
@@ -113,7 +113,7 @@ export default function ItemsMasterData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to update item " + res.data.message,
+                    "message": "Unable to update item: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true); 
@@ -136,8 +136,8 @@ export default function ItemsMasterData() {
         API.post("/api/item", {...data}).then((res) => {
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 popupProps.current = {
-                    "title": "Update Successful!",
-                    "message": "Item successfully updated",
+                    "title": "Add Successful!",
+                    "message": "Item successfully added",
                     "handleAlertClose": () => { setOpenSuccessPopup(false); }
                 };
                 setOpenSuccessPopup(true);
@@ -146,7 +146,7 @@ export default function ItemsMasterData() {
             } else {
                 popupProps.current = {
                     "title": "Error!",
-                    "message": "Unable to add item " + res.data.message,
+                    "message": "Unable to add item: " + res.data.message,
                     "handleAlertClose": () => { setOpenErrorPopup(false);}
                 };   
                 setOpenErrorPopup(true); 

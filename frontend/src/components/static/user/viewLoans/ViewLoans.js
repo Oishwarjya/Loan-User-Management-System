@@ -42,7 +42,7 @@ export default function ViewLoans() {
                 } else {
                     popupProps.current = {
                         "title": "Error!",
-                        "message": "Unable to fetch employee details " + res.data.message,
+                        "message": "Unable to fetch employee details: " + res.data.message,
                         "handleAlertClose": () => { setOpenErrorPopup(false);}
                     };   
                     setOpenErrorPopup(true);            }
@@ -66,7 +66,7 @@ export default function ViewLoans() {
                 } else {
                     popupProps.current = {
                         "title": "Error!",
-                        "message": "Unable to fetch loans " + res.data.message,
+                        "message": "Unable to fetch loans: " + res.data.message,
                         "handleAlertClose": () => { setOpenErrorPopup(false);}
                     };   
                     setOpenErrorPopup(true);            }
