@@ -9,7 +9,7 @@ import './styles.css';
 import data from '../../../../resourcemap.config.json';
 import * as API from '../../../services/ApiRequestService';
 import dayjs from 'dayjs';
-import { publish } from '../../../common/Events';
+import { publish } from '../../../services/EventService';
 
 
 export default function CustomerData(props) {

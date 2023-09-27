@@ -4,7 +4,7 @@ import CustomerData from './CustomerDataManagement';
 import * as API from '../../../services/ApiRequestService';
 import * as CommonUtils from '../../../common/CommonUtils';
 import dayjs from 'dayjs';
-import { subscribe } from '../../../common/Events';
+import { subscribe } from '../../../services/EventService';
 
 // function createData(userID, name, designation, department, gender, dob, doj) {
 //     return {userID, name, designation, department, gender, dob, doj};
