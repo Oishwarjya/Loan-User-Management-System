@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
@@ -12,6 +12,14 @@ export default function ViewLoans() {
     const [tableData, setTableData] = useState([]);
     const [empData, setEmpData] = useState(CommonUtils.initializeOrResetForm("employees", {"userID": userID}));
     var [headerFields, setHeaderFields] = useState([]);
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
+
     useEffect(() => {
         var tempObj= {};
         var tempArr= [];
@@ -25,15 +33,27 @@ export default function ViewLoans() {
                     });
             });
             setResourceObject({"resource": {...tempObj}});
-            tempArr = tempArr.filter(field => field!=="Employee ID");
+            tempArr = tempArr.filter(field => field.DisplayName!=="Employee ID");
             setHeaderFields([...tempArr]);
 
             API.get("/api/employee/"+userID).then(res => {
-                console.log(res);
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                     setEmpData({...res.data.data});
-                }
-            }).catch((err) => { window.alert(err)});
+                } else {
+                    popupProps.current = {
+                        "title": "Error!",
+                        "message": "Unable to fetch employee details: " + res.data.message,
+                        "handleAlertClose": () => { setOpenErrorPopup(false);}
+                    };   
+                    setOpenErrorPopup(true);            }
+            }).catch((err) => {
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch employee details",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+             });
 
             API.get("/api/loans/"+userID).then((res) => {
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
@@ -44,11 +64,20 @@ export default function ViewLoans() {
                     });
                     setTableData([...data]);
                 } else {
-                    window.alert("Unable to fetch loans " + res.data.message);
-                }
+                    popupProps.current = {
+                        "title": "Error!",
+                        "message": "Unable to fetch loans: " + res.data.message,
+                        "handleAlertClose": () => { setOpenErrorPopup(false);}
+                    };   
+                    setOpenErrorPopup(true);            }
             }).catch((err) => {
-                window.alert(err);
-            });
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch loans",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+             });
         }
     }, []);
 
@@ -85,6 +114,8 @@ export default function ViewLoans() {
                         </TableContainer>
                     </Paper>
                 </Box>
+            {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+            {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
 
         </>
     );

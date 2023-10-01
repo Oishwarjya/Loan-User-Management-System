@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Toolbar, Typography, Box, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import resources from '../../../../resourcemap.config.json';
@@ -12,6 +12,14 @@ export default function ItemsPurchased() {
     const [tableData, setTableData] = useState([]);
     const [empData, setEmpData] = useState(CommonUtils.initializeOrResetForm("employees", {"userID": userID}));
     var [headerFields, setHeaderFields] = useState([]);
+    const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
+    const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const popupProps = useRef({
+        "title": "",
+        "message": "",
+        "handleAlertClose": null
+    });
+
     useEffect(() => {
         var tempObj= {};
         var tempArr= [];
@@ -31,19 +39,42 @@ export default function ItemsPurchased() {
                 console.log(res);
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                     setEmpData({...res.data.data});
-                }
-            }).catch((err) => { window.alert(err)});
+                } else {
+                    popupProps.current = {
+                        "title": "Error!",
+                        "message": "Unable to fetch employee details: " + res.data.message,
+                        "handleAlertClose": () => { setOpenErrorPopup(false);}
+                    };   
+                    setOpenErrorPopup(true);            }
+            }).catch((err) => {
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch employee details",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+             });
+    
 
             API.get("/api/purchaseHistory/"+userID).then((res) => {
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                     setTableData([...res.data.data]);
                 } else {
-                    window.alert("Unable to fetch items " + res.data.message);
-                }
+                    popupProps.current = {
+                        "title": "Error!",
+                        "message": "Unable to fetch purchased items: " + res.data.message,
+                        "handleAlertClose": () => { setOpenErrorPopup(false);}
+                    };   
+                    setOpenErrorPopup(true);            }
             }).catch((err) => {
-                window.alert(err);
-            });
-        }
+                popupProps.current = {
+                    "title": "Error!",
+                    "message": "Unable to fetch purchased items",
+                    "handleAlertClose": () => { setOpenErrorPopup(false);}
+                };   
+                setOpenErrorPopup(true);
+             });
+            }
     }, []);
 
     return (
@@ -79,6 +110,8 @@ export default function ItemsPurchased() {
                         </TableContainer>
                     </Paper>
                 </Box>
+            {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
+            {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
 
         </>
     );

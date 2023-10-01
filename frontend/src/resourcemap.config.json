@@ -149,7 +149,7 @@
             },
             {
                 "Name": "loanDuration",
-                "DisplayName": "Loan Duration",
+                "DisplayName": "Loan Duration (Years)",
                 "Type": "number",
                 "Format": "number",
                 "Mutable": true
@@ -207,7 +207,7 @@
             },
             {
                 "Name": "itemValue",
-                "DisplayName": "Item Value",
+                "DisplayName": "Item Value (INR)",
                 "Type": "number",
                 "Format": "number",
                 "Mutable": false
@@ -248,7 +248,7 @@
             },
             {
                 "Name": "itemValue",
-                "DisplayName": "Item Value",
+                "DisplayName": "Item Value (INR)",
                 "Type": "number",
                 "Format": "number",
                 "Mutable": true

@@ -115,6 +115,7 @@ public class LoanService {
               List<Issue> issue = issueRepository.findByLoanID(id);
               if(issue.size()!=0) {
                 Item i = itemRepository.findById(issue.get(0).getItemID()).orElse(null);
+                issueRepository.deleteById(issue.get(0).getIssueID());
                 if(i != null) {
                     i.setItemAvailability("AVAILABLE");
                     itemRepository.save(i);
