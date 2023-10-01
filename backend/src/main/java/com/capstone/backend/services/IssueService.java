@@ -29,17 +29,12 @@ public class IssueService {
     @Autowired
     private ItemRepository itemRepository;
 
-    public Map<String,Object> getPurchaseHistory(String userID) throws ResourceNotFoundException {
+    public Map<String,Object> getPurchaseHistory(String userID) {
         List<Issue> issues = issueRepository.findByUserID(userID);
         Map<String, Object> res = new HashMap<>();
         Item tempItem;
         List<PurchaseHistoryDTO> vals = new ArrayList<PurchaseHistoryDTO>();
 
-        if(issues.size()==0) {
-            res.put("statusCode", 200);
-            res.put("data",vals);
-            res.put("message", "Items purchase history retrieved successfully");
-        }
         for(Issue i: issues) {
             tempItem = itemRepository.findById(i.getItemID()).orElse(null);
             PurchaseHistoryDTO tempPurchaseHistoryDTO = new PurchaseHistoryDTO();
