@@ -35,7 +35,7 @@ public class IssueController {
     private IssueService issueService;
 
     @GetMapping("/purchaseHistory/{userID}")
-    public Map<String, Object> getPuchaseHistory(@PathVariable String userID) throws ResourceNotFoundException {
+    public Map<String, Object> getPuchaseHistory(@PathVariable String userID) {
         return issueService.getPurchaseHistory(userID);
     }
 }

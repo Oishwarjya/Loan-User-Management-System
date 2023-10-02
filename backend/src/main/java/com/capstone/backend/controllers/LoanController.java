@@ -38,17 +38,17 @@ public class LoanController {
     private LoanService loanService;
 
     @GetMapping("/loans")
-    public Map<String, Object> getAllLoans() throws TableEmptyException {
+    public Map<String, Object> getAllLoans() {
         return loanService.getAllLoans();
     }
 
     @GetMapping("/loans/{userID}")
-    public Map<String, Object> getLoansByUserID(@PathVariable String userID) throws ResourceNotFoundException {
+    public Map<String, Object> getLoansByUserID(@PathVariable String userID) {
         return loanService.getLoansByUserID(userID);
     }
 
     @PostMapping("/loan")
-    public Map<String, Object> addNewLoan(@RequestBody ApplyForLoanDTO loan) throws ResourceNotFoundException, RecordAlreadyExistsException {
+    public Map<String, Object> addNewLoan(@RequestBody ApplyForLoanDTO loan) throws ResourceNotFoundException {
         return loanService.addNewLoan(loan);
     }
 
