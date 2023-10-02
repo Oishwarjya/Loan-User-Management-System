@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-import org.apache.tomcat.util.file.ConfigurationSource.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,6 @@ import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.Issue;
 import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.Loan;
-import com.capstone.backend.entities.User;
 import com.capstone.backend.dtos.ApplyForLoanDTO;
 import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
@@ -21,7 +19,6 @@ import com.capstone.backend.exceptions.TableEmptyException;
 import com.capstone.backend.repositories.IssueRepository;
 import com.capstone.backend.repositories.ItemRepository;
 import com.capstone.backend.repositories.LoanRepository;
-import com.capstone.backend.repositories.UserRepository;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 
 @Service
@@ -38,25 +35,18 @@ public class LoanService {
     public LoanService() {
     }
 
-    public Map<String, Object> getLoansByUserID(String id) throws ResourceNotFoundException
+    public Map<String, Object> getLoansByUserID(String id)
     {
         Map<String, Object> res = new HashMap<>();
         
         List<Loan> l = loanRepository.findAllByUserID(id);
-        if(l.size() == 0) {
-          res.put("statusCode", 200);
-          res.put("data",l);
-          res.put("message", "No loans in the system for the user");
-      }
-        else {
-            res.put("statusCode", 200);
-            res.put("data",l);
-            res.put("message", "Loan details retrieved successfully");
-          }
-          return res;
+        res.put("statusCode", 200);
+        res.put("data",l);
+        res.put("message", "Loan details retrieved successfully");
+        return res;
     }
 
-    public Map<String, Object> addNewLoan(ApplyForLoanDTO loanApplication) throws RecordAlreadyExistsException, ResourceNotFoundException { 
+    public Map<String, Object> addNewLoan(ApplyForLoanDTO loanApplication) throws ResourceNotFoundException { 
         Map<String, Object> res = new HashMap<>();
         List<Item> items = itemRepository.findByItemCategoryAndItemMakeAndItemDescriptionAndItemAvailability(
             loanApplication.getItemCategory(), 
@@ -74,28 +64,22 @@ public class LoanService {
             i.setItemAvailability("RESERVED FOR "+l.getLoanID());
             itemRepository.save(i);
             res.put("statusCode", 200);
+            res.put("data",i);
             res.put("message", "Loan added successfully");
-            res.put("itemValue", items.get(0).getItemValue());            
+            // res.put("itemValue", items.get(0).getItemValue());            
         }
         return res;
     }
 
-    public Map<String, Object> getAllLoans() throws TableEmptyException
+    public Map<String, Object> getAllLoans()
     {
         Map<String, Object> res = new HashMap<>();
         
         List<Loan> l = loanRepository.findAll();
-        if(l.size() == 0) {
-          res.put("statusCode", 200);
-          res.put("data",l);
-          res.put("message", "No loans in the system");
-      }
-        else {
-            res.put("statusCode", 200);
-            res.put("data",l);
-            res.put("message", "Loan details retrieved successfully");
-          }
-          return res;
+        res.put("statusCode", 200);
+        res.put("data",l);
+        res.put("message", "Loan details retrieved successfully");
+        return res;
     }
 
     public Map<String, Object> updateLoan(Loan loan) throws ResourceNotFoundException
@@ -132,6 +116,7 @@ public class LoanService {
           }
           if(l.getLoanStatus().equalsIgnoreCase("PENDING") && loan.getLoanStatus().equalsIgnoreCase("ACTIVE")) {
             List<Item> items = itemRepository.findByItemAvailability("RESERVED FOR "+l.getLoanID());
+            
             if(items.size() == 0) {
               l.setLoanStatus("TERMINATED");
               loanRepository.save(l);
@@ -148,6 +133,7 @@ public class LoanService {
           }
           loanRepository.save(loan);
           res.put("statusCode", 200);
+          res.put("data", loan);
           res.put("message", "Loan details updated successfully");
         }
         return res;
@@ -166,6 +152,7 @@ public class LoanService {
         } else {
           loanRepository.deleteById(id);
           res.put("statusCode", 200);
+          res.put("data",l);
           res.put("message", "Loan deleted successfully");
         }
         return res;
