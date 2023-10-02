@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import com.capstone.backend.repositories.EmployeeRepository;
 import com.capstone.backend.repositories.UserRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.User;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
-import com.capstone.backend.exceptions.TableEmptyException;
+
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -18,6 +21,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 @Service
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserService{
     
     @Autowired
@@ -27,8 +32,7 @@ public class UserService{
     private EmployeeRepository employeeRepository;
 
     
-    public UserService() {
-    }
+   
 
 
     public List < User > getAllUsers()  {
@@ -146,6 +150,11 @@ public class UserService{
           }
           else
           {
+            Employee emp = employeeRepository.findById(id).orElse(null);
+            if(emp!=null)
+            {
+                employeeRepository.deleteById(id);
+            }
             userRepository.deleteById(id);
             object.put("statusCode", "200");
             object.put("message", "Employee deleted successfully");
@@ -154,4 +163,3 @@ public class UserService{
       }
 }
     
-

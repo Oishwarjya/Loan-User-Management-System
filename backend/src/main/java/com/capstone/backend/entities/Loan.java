@@ -43,7 +43,16 @@ public class Loan {
 
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date issueDate;
-
+    
+    public Loan(long loanId, String userID, String loanType, short loanDuration, String loanStatus, Date issueDate) {
+        this.loanID = loanId;
+        this.userID = userID;   
+        this.loanType = loanType;
+        this.loanDuration = loanDuration;
+        this.loanStatus = loanStatus;
+        this.issueDate = issueDate;
+       
+    }
 
     @ManyToOne
     @JoinColumn(name = "userID",referencedColumnName = "userID",insertable = false,updatable = false)

@@ -1,9 +1,9 @@
 package com.capstone.backend.entities;
 
 
+import org.checkerframework.checker.units.qual.t;
 import org.hibernate.annotations.DynamicInsert;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -19,6 +19,15 @@ import lombok.Setter;
 @DynamicInsert
 @NoArgsConstructor
 public class Issue {
+
+    
+    public Issue(int issueID, String userID, int loanID, int itemID) {
+        this.issueID = issueID;
+        this.userID = userID;
+        this.loanID = loanID;
+        this.itemID = itemID;
+    }
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long issueID;
@@ -40,13 +49,4 @@ public class Issue {
     @ManyToOne
     @JoinColumn(name = "userID",referencedColumnName = "userID",insertable = false,updatable = false)
     private Employee employee;
-
-    @OneToOne(mappedBy = "issue",cascade = CascadeType.ALL,orphanRemoval = true)
-	private Item item;
-
-    
-
-
-    
-
 }

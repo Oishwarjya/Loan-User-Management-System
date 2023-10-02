@@ -69,7 +69,7 @@ public class LoanServiceTest {
     @DisplayName("should return employee's loans given userID")
     public void whenGETAllLoans_thenReturnAllLoans() throws ParseException {
         List<Loan> loans = new ArrayList<>();
-        loans.add(new Loan((long)3,"A000001","Furniture",(short)2,"ACTIVE",new SimpleDateFormat("yyyy-MM-dd").parse("2023-09-27")));
+        loans.add(new Loan((long)3,"A000001",null, (short)2,"ACTIVE",new SimpleDateFormat("yyyy-MM-dd").parse("2023-09-27")));
         loans.add(new Loan((long)4,"A000002","Electronics",(short)2,"PENDING",new SimpleDateFormat("yyyy-MM-dd").parse("2023-09-27")));
         Mockito.when(loanRepository.findAll()).thenReturn(loans);
         assertIterableEquals((List<Loan>)loanService.getAllLoans().get("data"), loans,"Not matching");

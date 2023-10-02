@@ -3,25 +3,23 @@ package com.capstone.backend.entities;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.capstone.backend.entities.Issue;
-import com.capstone.backend.entities.Loan;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Employee {
+
 
     @Id
     private String userID;
@@ -55,14 +53,6 @@ public class Employee {
 	private List<Issue> issues;
 
 	@OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
-	private List<Loan> loans;
-
-    @OneToOne
-    @JoinColumn(name = "userID",referencedColumnName = "userID",insertable = false,updatable = false)
-    private User user;
-
-
-
-    
+	private List<Loan> loans; 
 
 }
