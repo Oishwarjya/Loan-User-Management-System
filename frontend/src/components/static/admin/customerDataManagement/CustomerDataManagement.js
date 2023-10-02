@@ -242,7 +242,6 @@ export default function CustomerData(props) {
               .catch(err => { publish("error", {"title": "Error!", "message": "Unable to Add Employee"}); });
         }
         else {
-            console.log(formData);
         }
     }
     const handleUpdate = (e) => {
@@ -259,7 +258,6 @@ export default function CustomerData(props) {
                 .catch(err => { publish("error", {"title": "Error!", "message": "Unable to Add Employee"}); });
         }
         else {
-            console.log(formData);
         }
     }
     // const getDesignations = () => {

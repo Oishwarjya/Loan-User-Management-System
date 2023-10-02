@@ -130,16 +130,11 @@ export default function CustomerMasterData() {
     }
 
     const getOnboardedEmployees = () => {
-        // console.log("Getting all the onboarded employees!!");
         let endpoint_for_onboarded_employees = "/api/employees";
         API.get(endpoint_for_onboarded_employees)
             .then((res) => {
-                // console.log("Onboarded employees: ",res);
                 if(res.status>=200 && res.status < 300) {
-                    // console.log("Onboarded Data: ",res.data.data);
-                    // onBoardedData = res.data;
                     setOnBoardedData(res.data.data);
-                    // console.log(onBoardedData);
                 } else{
                     callErrPopup("Error!", res.data.message);
                 }
@@ -197,7 +192,6 @@ export default function CustomerMasterData() {
     }
 
     const onEmpCompleteForm = (e) => {
-        console.log("Event has been called with data:", e.detail);
         setOpen(false);
         callSuccessPopup(e.detail.title, e.detail.message);
     }
@@ -239,7 +233,6 @@ export default function CustomerMasterData() {
             gender: row.gender,
             isUpdate: true
         }
-        // console.log("Props object: ",propObj);
         setProps(propObj);
         setOpen(true);
     }
@@ -254,7 +247,6 @@ export default function CustomerMasterData() {
         setOpenDeleteDialog(false);
     }
     const onDeleteConfirmation = async () => {
-        // console.log("Delete the User confirmed");
         if(focusedData.name){
             await deleteEmployee(focusedData.userID);
             handleDeleteDialogClose();

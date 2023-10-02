@@ -44,36 +44,30 @@ public class CustomExceptionHandler  {
 	@ExceptionHandler(value = TableEmptyException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleTableEmptyException(TableEmptyException ex) {
-		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
 	}
 
 	@ExceptionHandler(value = RecordAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleRecordAlreadyExistsException(RecordAlreadyExistsException ex) {
-		System.out.println(ex.getMessage());
-		System.out.println(ex);
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 
 	@ExceptionHandler(value = ResourceNotFoundException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleResourceNotFoundException(ResourceNotFoundException ex) {
-		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
 	}
 
 	@ExceptionHandler(value = CannotDeleteRecordException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleCannotDeleteRecordException(CannotDeleteRecordException ex) {
-		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 	
 	@ExceptionHandler(value = ValidationException.class)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody ErrorResponse handleValidationException(ValidationException ex) {
-		System.out.println(ex.getMessage());
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 

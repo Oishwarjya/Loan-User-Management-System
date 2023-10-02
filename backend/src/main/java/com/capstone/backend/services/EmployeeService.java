@@ -52,7 +52,6 @@ public class EmployeeService {
           }
           else
           {
-            System.out.println("Exception caught");
             throw new RecordAlreadyExistsException("Employee already exists");
           }
       return object;
