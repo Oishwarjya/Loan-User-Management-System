@@ -27,9 +27,26 @@ public class Issue {
     @NotBlank(message="Employee ID cannot be blank")
     private String userID;
 
-    @NotNull(message="Loan Type cannot be null")   
+    @NotNull(message="Loan ID cannot be null")   
     private long loanID;
 
     @NotNull(message="Loan Type cannot be null")   
     private long itemID;
+
+    @OneToOne
+    @JoinColumn(name = "loanID",referencedColumnName = "loanID",insertable = false,updatable = false)
+    private Loan loan;
+
+    @ManyToOne
+    @JoinColumn(name = "userID",referencedColumnName = "userID",insertable = false,updatable = false)
+    private Employee employee;
+
+    @OneToOne(mappedBy = "issue",cascade = CascadeType.ALL,orphanRemoval = true)
+	private Item item;
+
+    
+
+
+    
+
 }

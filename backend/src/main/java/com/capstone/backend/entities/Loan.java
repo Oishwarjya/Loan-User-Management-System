@@ -1,8 +1,11 @@
 package com.capstone.backend.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -40,4 +43,12 @@ public class Loan {
 
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date issueDate;
+
+
+    @ManyToOne
+    @JoinColumn(name = "userID",referencedColumnName = "userID",insertable = false,updatable = false)
+    private Employee employee;
+
+    @OneToOne(mappedBy = "loan",cascade = CascadeType.ALL)
+	private Issue issue;
 }

@@ -1,6 +1,11 @@
 package com.capstone.backend.entities;
 
 
+import java.util.List;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -26,4 +31,23 @@ public class User {
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
+
+    // @OnDelete(action = OnDeleteAction.CASCADE)
+	// @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	// @JoinColumn(name = "userID")
+	// private List<Issue> issues;
+
+	// @OnDelete(action = OnDeleteAction.CASCADE)
+	// @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	// @JoinColumn(name = "userID")
+	// private List<Loan> loans;
+
+    // @OnDelete(action = OnDeleteAction.CASCADE)
+	// @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	// @JoinColumn(name = "userID")
+	// private Employee employee;
+
+	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+	private Employee employee;
+
 }

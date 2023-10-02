@@ -48,4 +48,8 @@ public class Item {
     @NotNull
     @NotBlank(message = "Description of item is mandatory")
     private String itemDescription;
+
+    @OneToOne
+    @JoinColumn(name = "itemID",referencedColumnName = "itemID",insertable = false,updatable = false)
+    private Issue issue;
 }
