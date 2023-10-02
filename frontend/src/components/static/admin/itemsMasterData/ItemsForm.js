@@ -1,18 +1,14 @@
 import {React, useState, useEffect} from 'react';
 import * as CommonUtils from '../../../common/CommonUtils';
-import * as API from '../../../services/ApiRequestService';
 import resources from '../../../../resourcemap.config.json';
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, InputLabel, TextField, MenuItem, Select, FormHelperText } from '@mui/material';
-import { LocalizationProvider, DateField } from '@mui/x-date-pickers';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
 
 export default function ItemsForm(props) {
     const { defaultFormData, resourceName } = props;
     const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {...defaultFormData}));
     const [errors, setErrors] = useState(CommonUtils.initializeOrResetForm(resourceName, {}, {'onlyString': true}));
     const [resourceObject, setResourceObject] = useState({"resource": {}});
+    const [btnDisabled, setBtnDisabled] = useState(false);
 
     useEffect(() => {
         var temp= {}
@@ -22,6 +18,7 @@ export default function ItemsForm(props) {
                 Object.keys(temp).forEach((key) => {
                     temp[key].Mutable = false;
                 });
+                setBtnDisabled(true);
             }
             if(props.btnLabel === "Add Item"){
                 temp.itemAvailability.Mutable = false;
@@ -121,7 +118,7 @@ export default function ItemsForm(props) {
         justifyContent: 'center',
         alignItems: 'center'
         }}>
-          <Button onClick={handleSubmit} variant="contained" className="signUpButton">{props.btnLabel}</Button>
+          <Button disabled={btnDisabled} onClick={handleSubmit} variant="contained" className="signUpButton">{props.btnLabel}</Button>
           </div>
         </>
     );

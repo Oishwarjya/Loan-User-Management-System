@@ -45,7 +45,7 @@ public class Employee {
     private Date dob;
 
     @NotNull(message = "doj can not be null")
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date doj;
 
     

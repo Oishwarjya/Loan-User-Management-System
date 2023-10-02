@@ -242,7 +242,6 @@ export default function CustomerData(props) {
               .catch(err => { publish("error", {"title": "Error!", "message": "Unable to Add Employee"}); });
         }
         else {
-            console.log(formData);
         }
     }
     const handleUpdate = (e) => {
@@ -259,28 +258,8 @@ export default function CustomerData(props) {
                 .catch(err => { publish("error", {"title": "Error!", "message": "Unable to Add Employee"}); });
         }
         else {
-            console.log(formData);
         }
     }
-    // const getDesignations = () => {
-    //     data.employees.fields[2].Options.map((designation, ind)=>{
-    //         return (<MenuItem value={designation}>{designation}</MenuItem>);
-    //     });
-    //     return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
-    // };
-    // const getDepartments = () => {
-    //     data.employees.fields[3].Options.map((dept, ind)=>{
-    //         return (<MenuItem value={dept}>{dept}</MenuItem>);
-    //     });
-        
-    //     return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
-    // };
-    // const getGenders = () => {
-    //     data.employees.fields[4].Options.map((gender, ind)=>{
-    //         return (<MenuItem value={gender}>{gender}</MenuItem>);
-    //     });
-    //         return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
-    // };
 
     return (
     <div className='card-div'>

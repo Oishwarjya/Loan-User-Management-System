@@ -1,6 +1,5 @@
 {
     "users": {
-        "dataURL": "/api/",
         "fields": [
             {
                 "Name": "userID",
@@ -20,7 +19,6 @@
         "count": 2
     },
     "employees": {
-        "dataURL": "/api/",
         "fields": [
             {
                 "Name": "userID",
@@ -84,7 +82,6 @@
         "count": 7
     },
     "applyLoans": {
-        "dataURL": "/api/",
         "fields": [
             {
                 "Name": "userID",
@@ -124,7 +121,6 @@
         "count": 4
     },
     "loans": {
-        "dataURL": "/api/",
         "fields": [
             {
                 "Name": "loanID",
@@ -175,7 +171,6 @@
         "count": 6
     },
     "purchaseHistory": {
-        "dataURL": "/api/",
         "fields": [
             {
                 "Name": "issueID",
@@ -216,7 +211,6 @@
         "count": 4
     },
     "items": {
-        "dataURL": "/api/",
         "fields": [
             {
                 "Name": "itemID",

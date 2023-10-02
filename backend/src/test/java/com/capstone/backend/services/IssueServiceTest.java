@@ -1,7 +1,6 @@
 package com.capstone.backend.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ import com.capstone.backend.entities.Issue;
 import com.capstone.backend.entities.Item;
 import com.capstone.backend.repositories.IssueRepository;
 import com.capstone.backend.repositories.ItemRepository;
-import com.capstone.backend.repositories.LoanRepository;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Issue Service")

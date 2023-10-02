@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.file.ConfigurationSource.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capstone.backend.controllers.EmployeeController;
 import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.User;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
@@ -17,7 +15,6 @@ import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.exceptions.TableEmptyException;
 import com.capstone.backend.repositories.EmployeeRepository;
 import com.capstone.backend.repositories.UserRepository;
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 
 @Service
 public class EmployeeService {
@@ -46,12 +43,12 @@ public class EmployeeService {
           {
                 employeeRepository.save(emp);
                 object.put("statusCode", 200);
+                object.put("data",emp);
                 object.put("message", "Employee added successfully");
             
           }
           else
           {
-            System.out.println("Exception caught");
             throw new RecordAlreadyExistsException("Employee already exists");
           }
       return object;
@@ -93,6 +90,7 @@ public class EmployeeService {
             employeeRepository.deleteById(emp.getUserID());
             employeeRepository.save(emp);
             object.put("statusCode", 200);
+            object.put("data",emp);
             object.put("message", "Employee updated successfully");
           }
           return object;
@@ -112,6 +110,7 @@ public class EmployeeService {
           {
             employeeRepository.deleteById(id);
             object.put("statusCode", 200);
+            object.put("data",e);
             object.put("message", "Employee deleted successfully");
           }
           return object;
@@ -130,7 +129,7 @@ public class EmployeeService {
           else
           {
             
-            object.put("statusCode", "200");
+            object.put("statusCode", 200);
             object.put("data",e);
             object.put("message", "Employee retrieved successfully");
           }
@@ -161,7 +160,7 @@ public class EmployeeService {
                               onBoardList.add(obj);
                         }
                   }
-                  object.put("statusCode", "200");
+                  object.put("statusCode", 200);
                   object.put("message", "New Employees retrieved successfully");
                   object.put("data",onBoardList);
                   return object;

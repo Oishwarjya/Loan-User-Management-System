@@ -119,6 +119,7 @@ public class UserService{
             if (user1 == null) {
                 object.put("availStatus", true);
                 object.put("statusCode", 200);
+                object.put("data",user.getUserID());
                 object.put("message", "User added successfully");
                 userRepository.save(user);
                 return object;
@@ -126,6 +127,7 @@ public class UserService{
             else{
                 object.put("availStatus", false);
                 object.put("statusCode", 400);
+                object.put("data",user.getUserID());
                 object.put("message", "User already exists");
                 return object;
             }
@@ -133,14 +135,15 @@ public class UserService{
         else{
                 object.put("availStatus", false);
                 object.put("statusCode", 400);
+                object.put("data",user.getUserID());
                 object.put("message", "Invalid ID");
                 return object;
         }
     }
 
-    public Map<String,String> deleteEmp(String id) throws ResourceNotFoundException
+    public Map<String,Object> deleteEmp(String id) throws ResourceNotFoundException
       {
-          Map<String, String> object = new HashMap<>();
+          Map<String, Object> object = new HashMap<>();
       
           User e = userRepository.findById(id).orElse(null);
           if(e == null)
@@ -156,7 +159,8 @@ public class UserService{
                 employeeRepository.deleteById(id);
             }
             userRepository.deleteById(id);
-            object.put("statusCode", "200");
+            object.put("statusCode", 200);
+            object.put("data",e.getUserID());
             object.put("message", "Employee deleted successfully");
           }
           return object;

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone.backend.entities.Item;
 import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
+import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.services.ItemService;
 
 
@@ -49,7 +50,7 @@ public class ItemController {
     
     @PutMapping("/item")
     @ResponseBody
-    public Map<String, Object> updateItem(@Valid @RequestBody Item itm) throws ResourceNotFoundException {
+    public Map<String, Object> updateItem(@Valid @RequestBody Item itm) throws ResourceNotFoundException, ValidationException {
         return itemService.updateItem(itm);
     }
 

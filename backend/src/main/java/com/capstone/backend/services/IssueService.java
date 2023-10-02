@@ -3,10 +3,8 @@ package com.capstone.backend.services;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.List;
 
-import org.apache.tomcat.util.file.ConfigurationSource.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +12,8 @@ import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.Issue;
 import com.capstone.backend.dtos.PurchaseHistoryDTO;
 
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
-import com.capstone.backend.exceptions.ResourceNotFoundException;
-import com.capstone.backend.exceptions.TableEmptyException;
 import com.capstone.backend.repositories.ItemRepository;
 import com.capstone.backend.repositories.IssueRepository;
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 
 @Service
 public class IssueService {

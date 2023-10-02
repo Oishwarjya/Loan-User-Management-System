@@ -7,19 +7,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.Issue;
 import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.Loan;
 import com.capstone.backend.dtos.ApplyForLoanDTO;
 import com.capstone.backend.exceptions.CannotDeleteRecordException;
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
-import com.capstone.backend.exceptions.TableEmptyException;
+import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.repositories.IssueRepository;
 import com.capstone.backend.repositories.ItemRepository;
 import com.capstone.backend.repositories.LoanRepository;
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 
 @Service
 public class LoanService {
@@ -82,10 +79,14 @@ public class LoanService {
         return res;
     }
 
-    public Map<String, Object> updateLoan(Loan loan) throws ResourceNotFoundException
+    public Map<String, Object> updateLoan(Loan loan) throws ResourceNotFoundException, ValidationException
     {
         Map<String, Object> res = new HashMap<>();
-    
+
+        if((loan.getLoanStatus().equals("ACTIVE") || loan.getLoanStatus().equals("COMPLETED")) && (loan.getIssueDate()==null || loan.getLoanDuration() < 1)) {
+          throw new ValidationException("Issue Date and Duration cannot be null and 0 for a non pending loan");
+        }
+
         Loan l = loanRepository.findById(loan.getLoanID()).orElse(null);
         if(l == null)
         {
@@ -93,6 +94,14 @@ public class LoanService {
         }
         else
         {
+          if(l.getLoanStatus().equals("TERMINATED")) {
+            throw new ValidationException("Cannot edit a terminated loan");
+          }
+
+          if((!l.getLoanStatus().equals("PENDING")) && !(l.getIssueDate().equals(loan.getIssueDate()))){
+            throw new ValidationException("Cannot edit issue date of a non pending loan");
+          }
+
           long id = loan.getLoanID();
           if(loan.getLoanStatus().equalsIgnoreCase("TERMINATED")) {
             if(l.getLoanStatus().equalsIgnoreCase("ACTIVE")) {

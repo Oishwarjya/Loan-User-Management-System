@@ -24,7 +24,6 @@ export default function Admin() {
 
     useEffect(() => {
         API.get("/api/employee/"+userID).then(res => {
-            console.log(res);
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                setName(res.data.data.name);
             } else {

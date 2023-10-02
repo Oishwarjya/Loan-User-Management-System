@@ -17,6 +17,8 @@ export default function LoanData() {
     const [open, setOpen] = useState(false);
     const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
     const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false);
+    const loanToDelete = useRef(-1);
     const popupProps = useRef({
         "title": "",
         "message": "",
@@ -70,8 +72,19 @@ export default function LoanData() {
 
     const handleDialogClose = () => { setOpen(false); };
 
-    const onDelete = (e, row) => {
-        API.del("/api/loan/"+row.loanID).then((res) => {
+    const confirmDelete = (e,row) => {
+        e.preventDefault();
+        loanToDelete.current = row.loanID;
+        setOpenDeleteConfirmDialog(true);
+    }
+
+    const handleDeleteDialogClose = () => {
+        setOpenDeleteConfirmDialog(false);
+    }
+
+    const onDelete = () => {
+        API.del("/api/loan/"+loanToDelete.current).then((res) => {
+            handleDeleteDialogClose();
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 popupProps.current = {
                     "title": "Success!",
@@ -89,6 +102,7 @@ export default function LoanData() {
                 setOpenErrorPopup(true); 
         }
         }).catch(err => { 
+            handleDeleteDialogClose();
             popupProps.current = {
             "title": "Error!",
             "message": "Unable to delete loan",
@@ -160,7 +174,7 @@ export default function LoanData() {
                                                     onClick={(e) => {onEdit(e, row)}}>Edit</Button>
                                                     <Button 
                                                     variant="text"
-                                                    onClick={(e) => {onDelete(e, row)}}>Delete</Button>
+                                                    onClick={(e) => {confirmDelete(e, row)}}>Delete</Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -179,6 +193,20 @@ export default function LoanData() {
                         </DialogContent>
                     </Dialog>
                 </Box>
+                <Dialog open={openDeleteConfirmDialog} onClose={handleDeleteDialogClose}>
+                <DialogTitle>
+                    Confirmation
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete loan {loanToDelete.current}?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteDialogClose}>No</Button>
+                    <Button onClick={onDelete}>Yes</Button>
+                </DialogActions>
+                </Dialog>
             {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
             {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
 

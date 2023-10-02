@@ -36,7 +36,6 @@ export default function ItemsPurchased() {
             setHeaderFields([...tempArr]);
 
             API.get("/api/employee/"+userID).then(res => {
-                console.log(res);
                 if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                     setEmpData({...res.data.data});
                 } else {

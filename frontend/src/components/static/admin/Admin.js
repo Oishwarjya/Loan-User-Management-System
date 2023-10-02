@@ -4,7 +4,6 @@ import { AppBar, Toolbar, Typography } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home'
 import AdminDashboard from './AdminDashboard';
-import CustomerData from './customerDataManagement/CustomerDataManagement';
 import LoanData from './loanCardManagement/LoanMasterData';
 import ItemsMasterData from './itemsMasterData/ItemsMasterData';
 import CustomerMasterData from './customerDataManagement/CustomerMasterData';
