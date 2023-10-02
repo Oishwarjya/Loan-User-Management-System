@@ -57,6 +57,7 @@ public class ItemService {
         Map<String, Object> object = new HashMap<>();
         itemRepository.save(itm);
         object.put("statusCode", 200);
+        object.put("data",itm);
         object.put("message", "Item added successfully");
         return object;
     }
@@ -75,7 +76,8 @@ public class ItemService {
         {
           
           itemRepository.save(itm);
-           object.put("statusCode", 200);
+          object.put("statusCode", 200);
+          object.put("data",itm);
           object.put("message", "Item updated successfully");
         }
         return object;
@@ -98,6 +100,7 @@ public class ItemService {
             }
             itemRepository.deleteById(id);
             object.put("statusCode", 200);
+            object.put("data",i);
             object.put("message", "Item deleted successfully");
           }
           return object;

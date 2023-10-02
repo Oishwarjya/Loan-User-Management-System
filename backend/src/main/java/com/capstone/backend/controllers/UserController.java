@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
-    public Map<String,String> deleteEmp(@PathVariable String id) throws ResourceNotFoundException
+    public Map<String,Object> deleteEmp(@PathVariable String id) throws ResourceNotFoundException
     {
         return userService.deleteEmp(id);
     }

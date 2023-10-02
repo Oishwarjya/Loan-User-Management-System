@@ -46,6 +46,7 @@ public class EmployeeService {
           {
                 employeeRepository.save(emp);
                 object.put("statusCode", 200);
+                object.put("data",emp);
                 object.put("message", "Employee added successfully");
             
           }
@@ -93,6 +94,7 @@ public class EmployeeService {
             employeeRepository.deleteById(emp.getUserID());
             employeeRepository.save(emp);
             object.put("statusCode", 200);
+            object.put("data",emp);
             object.put("message", "Employee updated successfully");
           }
           return object;
@@ -112,6 +114,7 @@ public class EmployeeService {
           {
             employeeRepository.deleteById(id);
             object.put("statusCode", 200);
+            object.put("data",e);
             object.put("message", "Employee deleted successfully");
           }
           return object;
@@ -130,7 +133,7 @@ public class EmployeeService {
           else
           {
             
-            object.put("statusCode", "200");
+            object.put("statusCode", 200);
             object.put("data",e);
             object.put("message", "Employee retrieved successfully");
           }
@@ -161,7 +164,7 @@ public class EmployeeService {
                               onBoardList.add(obj);
                         }
                   }
-                  object.put("statusCode", "200");
+                  object.put("statusCode", 200);
                   object.put("message", "New Employees retrieved successfully");
                   object.put("data",onBoardList);
                   return object;
