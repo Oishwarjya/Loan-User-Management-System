@@ -13,6 +13,7 @@ export default function LoanCardForm(props) {
     const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {...defaultFormData}));
     const [errors, setErrors] = useState(CommonUtils.initializeOrResetForm(resourceName, {}, {'onlyString': true}));
     const [resourceObject, setResourceObject] = useState({"resource": {}});
+    const [btnDisabled, setBtnDisabled] = useState(false);
     const [options, setOptions] = useState({
         "loanStatus": defaultFormData.loanStatus==="PENDING"?["PENDING","ACTIVE","TERMINATED"]: defaultFormData.loanStatus==="ACTIVE"?["ACTIVE", "CLOSED", "TERMINATED"]: [defaultFormData.loanStatus]
     });
@@ -28,6 +29,7 @@ export default function LoanCardForm(props) {
                 Object.keys(temp).forEach((key) => {
                     temp[key].Mutable = false;
                 });
+                setBtnDisabled(true);
             }
             setResourceObject({"resource": {...temp}});
         }
@@ -189,7 +191,7 @@ export default function LoanCardForm(props) {
         justifyContent: 'center',
         alignItems: 'center'
         }}>
-          <Button onClick={handleSubmit} variant="contained" className="signUpButton">Update Loan</Button>
+          <Button disabled={btnDisabled} onClick={handleSubmit} variant="contained" className="signUpButton">Update Loan</Button>
           </div>
         </>
     );

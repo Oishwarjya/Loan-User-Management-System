@@ -13,6 +13,7 @@ export default function ItemsForm(props) {
     const [formData, setFormData] = useState(CommonUtils.initializeOrResetForm(resourceName, {...defaultFormData}));
     const [errors, setErrors] = useState(CommonUtils.initializeOrResetForm(resourceName, {}, {'onlyString': true}));
     const [resourceObject, setResourceObject] = useState({"resource": {}});
+    const [btnDisabled, setBtnDisabled] = useState(false);
 
     useEffect(() => {
         var temp= {}
@@ -22,6 +23,7 @@ export default function ItemsForm(props) {
                 Object.keys(temp).forEach((key) => {
                     temp[key].Mutable = false;
                 });
+                setBtnDisabled(true);
             }
             if(props.btnLabel === "Add Item"){
                 temp.itemAvailability.Mutable = false;
@@ -121,7 +123,7 @@ export default function ItemsForm(props) {
         justifyContent: 'center',
         alignItems: 'center'
         }}>
-          <Button onClick={handleSubmit} variant="contained" className="signUpButton">{props.btnLabel}</Button>
+          <Button disabled={btnDisabled} onClick={handleSubmit} variant="contained" className="signUpButton">{props.btnLabel}</Button>
           </div>
         </>
     );

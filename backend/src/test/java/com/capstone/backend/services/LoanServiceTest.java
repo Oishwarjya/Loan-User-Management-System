@@ -34,6 +34,7 @@ import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.Loan;
 import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
+import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.repositories.IssueRepository;
 import com.capstone.backend.repositories.ItemRepository;
 import com.capstone.backend.repositories.LoanRepository;
@@ -200,8 +201,8 @@ public class LoanServiceTest {
             try {
                 assertEquals(loanService.updateLoan(newLoan).get("data"), newLoan);
                 Mockito.verify(itemRepository).save(item);
-            } catch (ResourceNotFoundException e) {
-                fail("Service threw ResourceNotFoundException");            
+            } catch (ResourceNotFoundException | ValidationException e) {
+                fail("Service threw Exception "+e.getMessage());            
             }
         }
 
@@ -220,6 +221,39 @@ public class LoanServiceTest {
             
             ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, () -> loanService.updateLoan(newLoan));
             assertEquals(e.getMessage(),"Item not reserved and does not exist, please re-apply for the loan");
+        }
+
+        @Test
+        @DisplayName("should throw exception if loan duration is 0 for an active loan")
+        public void givenLoan_whenLoanDuration0ForActiveLoan_thenThrowException() {
+            newLoan.setLoanDuration((short)0);
+            ValidationException e = assertThrows(ValidationException.class, () -> loanService.updateLoan(newLoan));
+            assertEquals(e.getMessage(),"Issue Date and Duration cannot be null and 0 for a non pending loan");
+        }
+
+        @Test
+        @DisplayName("should throw exception if attempting to edit a terminated loan")
+        public void givenLoan_whenEditingTerminatedLoan_thenThrowException() {
+            existingLoan.setLoanStatus("TERMINATED");
+            Mockito.when(loanRepository.findById((long)1))
+            .thenReturn(Optional.of(existingLoan));
+            
+            ValidationException e = assertThrows(ValidationException.class, () -> loanService.updateLoan(newLoan));
+            assertEquals(e.getMessage(),"Cannot edit a terminated loan");
+        }
+
+        @Test
+        @DisplayName("should throw exception if attempting to edit issue date of a non terminated loan")
+        public void givenLoan_whenEditingIssueDateOfNonPendingLoan_thenThrowException() throws ParseException{
+            existingLoan.setIssueDate(
+                new SimpleDateFormat("yyyy-MM-dd").parse("2023-10-17")
+            );
+            existingLoan.setLoanStatus("CLOSED");
+            Mockito.when(loanRepository.findById((long)1))
+            .thenReturn(Optional.of(existingLoan));
+            
+            ValidationException e = assertThrows(ValidationException.class, () -> loanService.updateLoan(newLoan));
+            assertEquals(e.getMessage(),"Cannot edit issue date of a non pending loan");
         }
 
         @Test
@@ -245,8 +279,8 @@ public class LoanServiceTest {
             try {
                 assertEquals(loanService.updateLoan(newLoan).get("data"), newLoan);
                 Mockito.verify(itemRepository).save(item);
-            } catch (ResourceNotFoundException e) {
-                fail("Service threw ResourceNotFoundException");            
+            } catch (ResourceNotFoundException | ValidationException e) {
+                fail("Service threw exception " + e.getMessage());            
             }
 
         }
@@ -256,6 +290,7 @@ public class LoanServiceTest {
         public void givenLoan_whenTerminateFromActive_thenUpdateItemAndIssue() {
             newLoan.setLoanStatus("TERMINATED");
             existingLoan.setLoanStatus("ACTIVE");
+            existingLoan.setIssueDate(newLoan.getIssueDate());
 
             Mockito.when(loanRepository.findById((long)1))
             .thenReturn(Optional.of(existingLoan));
@@ -280,8 +315,8 @@ public class LoanServiceTest {
                 assertEquals(loanService.updateLoan(newLoan).get("data"), newLoan);
                 Mockito.verify(itemRepository).save(item);
                 Mockito.verify(issueRepository).deleteById(issue.getIssueID());
-            } catch (ResourceNotFoundException e) {
-                fail("Service threw ResourceNotFoundException");            
+            } catch (ResourceNotFoundException | ValidationException e) {
+                fail("Service threw exception " + e.getMessage());            
             }
         }
 

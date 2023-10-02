@@ -14,6 +14,7 @@ import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.User;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
+import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.repositories.EmployeeRepository;
 import com.capstone.backend.repositories.ItemRepository;
 import com.capstone.backend.repositories.UserRepository;
@@ -55,6 +56,7 @@ public class ItemService {
     public Map< String, Object> addItem(Item itm)
     {
         Map<String, Object> object = new HashMap<>();
+        itm.setItemAvailability("AVAILABLE");
         itemRepository.save(itm);
         object.put("statusCode", 200);
         object.put("data",itm);
@@ -62,10 +64,14 @@ public class ItemService {
         return object;
     }
 
-    public Map<String,Object> updateItem(Item itm) throws ResourceNotFoundException
+    public Map<String,Object> updateItem(Item itm) throws ResourceNotFoundException, ValidationException
     {
         Map<String, Object> object = new HashMap<>();
-    
+        if(!(itm.getItemAvailability().equals("AVAILABLE")
+         || itm.getItemAvailability().equals("AVAILABLE")
+         || itm.getItemAvailability().startsWith("RESERVED FOR"))) {
+            throw new ValidationException("Item status can only be AVAILABLE or UNAVAILABLE or RESERVED FOR <loanID>");
+         }
         Item i = itemRepository.findById(itm.getItemID()).orElse(null);
         if(i == null)
         {
@@ -74,11 +80,16 @@ public class ItemService {
         }
         else
         {
-          
-          itemRepository.save(itm);
-          object.put("statusCode", 200);
-          object.put("data",itm);
-          object.put("message", "Item updated successfully");
+          if(i.getItemAvailability().equalsIgnoreCase("UNAVAILABLE"))
+          {
+            throw new ValidationException("Cannot update unavailable item");
+          }
+          else {
+            itemRepository.save(itm);
+            object.put("statusCode", 200);
+            object.put("data",itm);
+            object.put("message", "Item updated successfully");
+          }
         }
         return object;
     }

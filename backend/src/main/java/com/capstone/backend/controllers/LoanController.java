@@ -25,6 +25,7 @@ import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
 import com.capstone.backend.exceptions.TableEmptyException;
+import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.services.LoanService;
 
 import jakarta.validation.Valid;
@@ -53,7 +54,7 @@ public class LoanController {
     }
 
     @PutMapping("/loan")
-    public Map<String, Object> updateLoan(@Valid @RequestBody Loan loan) throws ResourceNotFoundException {
+    public Map<String, Object> updateLoan(@Valid @RequestBody Loan loan) throws ResourceNotFoundException, ValidationException {
         return loanService.updateLoan(loan);
     }
 

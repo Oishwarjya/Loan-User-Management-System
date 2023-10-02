@@ -70,5 +70,11 @@ public class CustomExceptionHandler  {
 		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
 	}
 	
+	@ExceptionHandler(value = ValidationException.class)
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody ErrorResponse handleValidationException(ValidationException ex) {
+		System.out.println(ex.getMessage());
+		return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+	}
 
 }

@@ -35,6 +35,7 @@ import com.capstone.backend.dtos.ApplyForLoanDTO;
 import com.capstone.backend.entities.Loan;
 import com.capstone.backend.exceptions.CannotDeleteRecordException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
+import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.services.LoanService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -133,7 +134,7 @@ public class LoanControllerTest {
         ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, () -> loanController.addNewLoan(dummyApplication));
         assertEquals(e.getMessage(),"No Items Available");
     }
-
+    
     @Test
     @DisplayName("should call updateLoan on PUT to /loan")
     public void givenPUTloan_thenReturnSuccess() throws Exception {
@@ -161,8 +162,8 @@ public class LoanControllerTest {
     }
 
     @Test
-    @DisplayName("should call updateLoan on PUT to /loan and return exception")
-    public void givenPUTloan_thenReturnException() throws Exception {
+    @DisplayName("should call updateLoan on PUT to /loan and return resource not found exception")
+    public void givenPUTloan_thenReturnRNFException() throws Exception {
 
         Loan loan = new Loan(
                 (long)1,
@@ -179,6 +180,24 @@ public class LoanControllerTest {
         assertEquals(e.getMessage(),"Loan does not exist");
     }
 
+    @Test
+    @DisplayName("should call updateLoan on PUT to /loan and return validation exception")
+    public void givenPUTloan_thenReturnValidationException() throws Exception {
+
+        Loan loan = new Loan(
+                (long)1,
+                "A000001", 
+                "Furniture", 
+                (short)5, 
+                "ACTIVE", 
+                new SimpleDateFormat("yyyy-MM-dd").parse("2023-09-27"));
+
+        Mockito.when(loanService.updateLoan(loan))
+        .thenThrow(new ValidationException("Loan does not exist"));
+
+        ValidationException e = assertThrows(ValidationException.class, () -> loanController.updateLoan(loan));
+        assertEquals(e.getMessage(),"Loan does not exist");
+    }    
     @Test
     @DisplayName("should call deleteLoan on DELETE to /loan/{loanID}")
     public void givenDELETEloan_thenReturnSuccess() throws Exception {
