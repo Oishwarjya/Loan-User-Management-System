@@ -260,25 +260,6 @@ export default function CustomerData(props) {
         else {
         }
     }
-    // const getDesignations = () => {
-    //     data.employees.fields[2].Options.map((designation, ind)=>{
-    //         return (<MenuItem value={designation}>{designation}</MenuItem>);
-    //     });
-    //     return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
-    // };
-    // const getDepartments = () => {
-    //     data.employees.fields[3].Options.map((dept, ind)=>{
-    //         return (<MenuItem value={dept}>{dept}</MenuItem>);
-    //     });
-        
-    //     return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
-    // };
-    // const getGenders = () => {
-    //     data.employees.fields[4].Options.map((gender, ind)=>{
-    //         return (<MenuItem value={gender}>{gender}</MenuItem>);
-    //     });
-    //         return (<MenuItem value={"designation"}>{"designation"}</MenuItem>);
-    // };
 
     return (
     <div className='card-div'>

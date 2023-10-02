@@ -9,7 +9,6 @@ import com.capstone.backend.repositories.UserRepository;
 
 import com.capstone.backend.entities.User;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
-import com.capstone.backend.exceptions.TableEmptyException;
 
 import java.util.*;
 import java.util.regex.Matcher;

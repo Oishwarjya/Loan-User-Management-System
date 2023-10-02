@@ -6,18 +6,6 @@ import * as CommonUtils from '../../../common/CommonUtils';
 import dayjs from 'dayjs';
 import { subscribe } from '../../../services/EventService';
 
-// function createData(userID, name, designation, department, gender, dob, doj) {
-//     return {userID, name, designation, department, gender, dob, doj};
-// }
-
-// let onBoardedData = [
-//     createData("k123457", "John Doe", "Manager", "Finance", "Male", "1995-08-14", "2020-01-12")
-// ]
-
-// let newEmployeeData = [
-//     createData("k123459", "", "", "", "", "", "")
-// ]
-
 const headerFields = [
     "Employee Id",
     "Employee Name",

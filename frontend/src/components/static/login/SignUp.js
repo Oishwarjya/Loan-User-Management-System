@@ -16,7 +16,7 @@ import * as API from '../../services/ApiRequestService';
 import * as CommonUtils from '../../common/CommonUtils';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
-import './styles.css';
+import './loginStyles.css';
 
 export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);

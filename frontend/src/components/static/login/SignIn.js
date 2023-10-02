@@ -16,7 +16,7 @@ import { FormHelperText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import * as CommonUtils from '../../common/CommonUtils';
 import * as API from '../../services/ApiRequestService';
-import './styles.css';
+import './loginStyles.css';
 
 export default function SignIn() {
     let navigate = useNavigate();

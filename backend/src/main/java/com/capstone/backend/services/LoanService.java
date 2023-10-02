@@ -7,20 +7,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capstone.backend.entities.Employee;
 import com.capstone.backend.entities.Issue;
 import com.capstone.backend.entities.Item;
 import com.capstone.backend.entities.Loan;
 import com.capstone.backend.dtos.ApplyForLoanDTO;
 import com.capstone.backend.exceptions.CannotDeleteRecordException;
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 import com.capstone.backend.exceptions.ResourceNotFoundException;
-import com.capstone.backend.exceptions.TableEmptyException;
 import com.capstone.backend.exceptions.ValidationException;
 import com.capstone.backend.repositories.IssueRepository;
 import com.capstone.backend.repositories.ItemRepository;
 import com.capstone.backend.repositories.LoanRepository;
-import com.capstone.backend.exceptions.RecordAlreadyExistsException;
 
 @Service
 public class LoanService {
