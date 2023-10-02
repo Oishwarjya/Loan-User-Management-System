@@ -17,6 +17,8 @@ export default function ItemsMasterData() {
     const [openNew, setOpenNew] = useState(false);
     const [openSuccessPopup, setOpenSuccessPopup] = useState(false);
     const [openErrorPopup, setOpenErrorPopup] = useState(false);
+    const [openDeleteConfirmDialog, setOpenDeleteConfirmDialog] = useState(false);
+    const itemToDelete = useRef(-1);
     const popupProps = useRef({
         "title": "",
         "message": "",
@@ -71,8 +73,19 @@ export default function ItemsMasterData() {
     const handleEditDialogClose = () => { setOpenEdit(false); };
     const handleNewDialogClose = () => { setOpenNew(false); };
 
-    const onDelete = (e, row) => {
-        API.del("/api/item/"+row.itemID).then((res) => {
+    const confirmDelete = (e,row) => {
+        e.preventDefault();
+        itemToDelete.current = row.itemID;
+        setOpenDeleteConfirmDialog(true);
+    }
+
+    const handleDeleteDialogClose = () => {
+        setOpenDeleteConfirmDialog(false);
+    }
+
+    const onDelete = () => {
+        API.del("/api/item/"+itemToDelete.current).then((res) => {
+            handleDeleteDialogClose();
             if(res.data.statusCode >= 200 && res.data.statusCode < 300) {
                 popupProps.current = {
                     "title": "Success!",
@@ -90,6 +103,7 @@ export default function ItemsMasterData() {
                 setOpenErrorPopup(true); 
         }
     }).catch(err => { 
+        handleDeleteDialogClose();
         popupProps.current = {
             "title": "Error!",
             "message": "Unable to delete item",
@@ -210,7 +224,7 @@ export default function ItemsMasterData() {
                                                     onClick={(e) => {onEdit(e, row)}}>Edit</Button>
                                                     <Button 
                                                     variant="text"
-                                                    onClick={(e) => {onDelete(e, row)}}>Delete</Button>
+                                                    onClick={(e) => {confirmDelete(e, row)}}>Delete</Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -237,6 +251,20 @@ export default function ItemsMasterData() {
                         </DialogContent>
                     </Dialog>
                 </Box>
+                <Dialog open={openDeleteConfirmDialog} onClose={handleDeleteDialogClose}>
+                <DialogTitle>
+                    Confirmation
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete item {itemToDelete.current}?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteDialogClose}>No</Button>
+                    <Button onClick={onDelete}>Yes</Button>
+                </DialogActions>
+            </Dialog>
             {openSuccessPopup && <CommonUtils.SuccessAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.SuccessAlert>}
             {openErrorPopup && <CommonUtils.ErrorAlert title={popupProps.current.title} message={popupProps.current.message} handleAlertClose={popupProps.current.handleAlertClose}></CommonUtils.ErrorAlert>}
         </>
