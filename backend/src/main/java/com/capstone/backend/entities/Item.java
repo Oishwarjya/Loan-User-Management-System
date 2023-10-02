@@ -1,4 +1,5 @@
 package com.capstone.backend.entities;
+
 import org.hibernate.annotations.DynamicInsert;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -39,4 +40,5 @@ public class Item {
     @NotNull
     @NotBlank(message = "Description of item is mandatory")
     private String itemDescription;
+
 }

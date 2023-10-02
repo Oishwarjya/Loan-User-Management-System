@@ -1,20 +1,25 @@
 package com.capstone.backend.entities;
 
 import java.util.Date;
+import java.util.List;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Employee {
+
 
     @Id
     private String userID;
@@ -42,4 +47,12 @@ public class Employee {
     @NotNull(message = "doj can not be null")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date doj;
+
+    
+	@OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
+	private List<Issue> issues;
+
+	@OneToMany(mappedBy = "employee",cascade = CascadeType.ALL)
+	private List<Loan> loans; 
+
 }
