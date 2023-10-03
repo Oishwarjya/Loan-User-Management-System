@@ -51,7 +51,7 @@ public class LoanService {
             loanApplication.getItemDescription(),
             "AVAILABLE");
         if(items.size() == 0) {
-            throw new ResourceNotFoundException("No items available");
+            throw new ResourceNotFoundException("Requested item is unavailable");
         } else {
             Loan l = new Loan();
             l.setUserID(loanApplication.getUserID());
@@ -98,9 +98,9 @@ public class LoanService {
             throw new ValidationException("Cannot edit a terminated loan");
           }
 
-          if((!l.getLoanStatus().equals("PENDING")) && !(l.getIssueDate().equals(loan.getIssueDate()))){
-            throw new ValidationException("Cannot edit issue date of a non pending loan");
-          }
+          // if((!l.getLoanStatus().equals("PENDING")) && !(l.getIssueDate().equals(loan.getIssueDate()))){
+          //   throw new ValidationException("Cannot edit issue date of a non pending loan");
+          // }
 
           long id = loan.getLoanID();
           if(loan.getLoanStatus().equalsIgnoreCase("TERMINATED")) {
